@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Market</title>
+    <style>
+        body {
+            background-color: #0B0C0E;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            margin: 0;
+        }
+        .raise-button {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px; 
+    right: 350px; 
+    z-index: 10; /* Ensure it's on top */
+}
+
+.network-select {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 180px; /* Adjusted to maintain spacing with the raise button */
+}
+
+.connect-button {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px; /* This should remain the same */
+}
+
+        h1 {
+            margin: 20px 0 0;
+            text-align: center;
+        }
+        #walletAddress {
+            text-align: center;
+            margin-top: 5px;
+        }
+        #userBalance {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 80px;
+            align-items: center;
+        }
+        .kamala-image, .trump-image {
+    width: 500px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.kamala-image {
+    margin: 10px 0px 10px 0; /* Top, Right, Bottom, Left */
+}
+
+.trump-image {
+    margin: 10px 0 10px 0px; /* Top, Right, Bottom, Left */
+}
+
+
+.balance-container {
+    text-align: center; /* Center the container content */
+}
+
+#kamalaBalance {
+    display: inline-block; /* Keep the element on the same line */
+    text-align: center; /* Center text within this div */
+    margin: 10px 800px 10px 1px; /* Top, Right, Bottom, Left */
+}
+
+#trumpBalance {
+    display: inline-block; /* Keep the element on the same line */
+    text-align: center; /* Center text within this div */
+    margin: 1px 1px 1px 800px; /* Top, Right, Bottom, Left */
+}
+
+
+
+
+        .bet-input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 1200px;
+            padding-left: 20px;
+        }
+        .bet-input {
+            width: 200px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #3B82F6;
+            background-color: #1E1E1E;
+            color: white;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .bet-button {
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="raise-button">Raise Platform</button>
+
+    <select class="network-select" id="networkSelect">
+        <option value="Linea">Linea Network</option>
+    </select>
+    <button class="connect-button" id="connectWallet">Connect Wallet</button>
+    <h1>Prediction Market</h1>
+    <div id="walletAddress"></div>
+    <div id="userBalance"></div>
+
+    <div id="walletBalances" style="text-align: center; margin-top: 10px;"></div>
+
+
+
+    <div class="image-container">
+        <img class="kamala-image" src="https://raw.githubusercontent.com/parzivalishan/newsuper/refs/heads/main/assets/harris.webp" alt="Kamala Harris" title="Kamala Harris" />
+        <img class="trump-image" src="https://raw.githubusercontent.com/parzivalishan/newsuper/refs/heads/main/assets/trump.webp" alt="Donald Trump" title="Donald Trump" />
+    </div>
+
+ <!-- Kamala Photo -->
+<div id="kamalaBalance"></div>
+
+<!-- Trump Photo -->
+<div id="trumpBalance"></div>
+
+
+    <div class="bet-input-container">
+        <div>
+            <h3>Enter Kamala Bet</h3>
+            <input type="number" class="bet-input" id="betAmountKamala" min="0" placeholder="Enter your bet" />
+            <button class="bet-button" id="placeBetKamala">Place Kamala Bet</button>
+        </div>
+        <div style="margin-left: auto;">
+            <h3>Enter Trump Bet</h3>
+            <input type="number" class="bet-input" id="betAmountTrump" min="0" placeholder="Enter your bet" />
+            <button class="bet-button" id="placeBetTrump">Place Trump Bet</button>
+        </div>
+    </div>
+    
+    </div>
+
+    <script>
+
+        
+        const connectButton = document.getElementById('connectWallet');
+        const walletAddressDiv = document.getElementById('walletAddress');
+        const userBalanceDiv = document.getElementById('userBalance');
+        const networkSelect = document.getElementById('networkSelect');
+        const betAmountKamalaInput = document.getElementById('betAmountKamala');
+        const betAmountTrumpInput = document.getElementById('betAmountTrump');
+    
+        const LINEA_CHAIN_ID = 59141; // Chain ID for Linea
+        const LINEA_RPC_URL = 'https://rpc.sepolia.linea.build/';
+    
+        const networkParams = {
+            'LINEA': {
+                title: 'Linea',
+                chainId: LINEA_CHAIN_ID,
+                symbol: 'ETH',
+            },
+        };
+    
+        async function switchNetwork(network) {
+            const params = networkParams[network];
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: `0x${params.chainId.toString(16)}`, // Convert to hex
+                        chainName: params.title,
+                        nativeCurrency: {
+                            name: params.title,
+                            symbol: params.symbol,
+                            decimals: 18
+                        },
+                        rpcUrls: [LINEA_RPC_URL],
+                    }]
+                });
+            } catch (error) {
+                console.error(`Failed to switch to ${network}:`, error);
+            }
+        }
+    
+        async function fetchBalance(walletAddress) {
+            const response = await fetch(`${LINEA_RPC_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'eth_getBalance',
+                    params: [walletAddress, 'latest']
+                })
+            });
+            const data = await response.json();
+            const balanceInWei = parseInt(data.result, 16);
+            return balanceInWei / 1e18; // Convert wei to ETH
+        }
+    
+        async function sendTransaction(amount, recipientAddress) {
+    try {
+        console.log('Raw Amount Entered:', amount); // Debugging line
+
+        // Validate the amount
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount greater than 0.');
+            return;
+        }
+
+        // Request accounts from MetaMask and get the wallet address
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const walletAddress = accounts[0];
+
+        // Get the current chain ID to ensure the correct network is used
+        const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+        console.log('Current Chain ID:', parseInt(currentChainId, 16)); // Logs Chain ID in decimal
+
+        // Convert amount from ETH to Wei (BigInt for precision)
+        const amountInWei = BigInt(amount * 1e18);
+
+        // Estimate the gas for the transaction
+        const estimatedGas = await window.ethereum.request({
+            method: 'eth_estimateGas',
+            params: [{
+                from: walletAddress,
+                to: recipientAddress,
+                value: `0x${amountInWei.toString(16)}`, // Convert amount to hex
+            }]
+        });
+
+        // Fetch the current gas price
+        const gasPrice = await window.ethereum.request({ method: 'eth_gasPrice' });
+
+        // Create the transaction object
+        const transactionParameters = {
+            to: recipientAddress,
+            from: walletAddress,
+            value: `0x${amountInWei.toString(16)}`, // Amount in hex
+            gas: `0x${parseInt(estimatedGas).toString(16)}`, // Gas in hex
+            gasPrice: `0x${parseInt(gasPrice).toString(16)}` // Gas price in hex
+        };
+
+        console.log('Transaction Parameters:', transactionParameters); // Debugging line
+
+        // Send the transaction
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [transactionParameters],
+        });
+        console.log('Transaction successful with hash:', txHash);
+
+        // Display the transaction hash with a link to the explorer
+        const messageDiv = document.createElement('div');
+        messageDiv.innerHTML = `TX Hash: <a href="https://explorer.sepolia.linea.build//tx/${txHash}" target="_blank">${txHash}</a>`;
+        messageDiv.style.padding = '10px';
+        messageDiv.style.border = '1px solid green';
+        messageDiv.style.backgroundColor = '#d4edda';
+        messageDiv.style.color = '#155724';
+        messageDiv.style.margin = '10px 0';
+
+        document.body.appendChild(messageDiv);
+    } catch (error) {
+        console.error('Transaction failed:', error);
+        alert(`Transaction failed: ${error.message}`);
+    }
+}
+
+
+
+// Event listeners for placing bets
+connectButton.addEventListener('click', async () => {
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const walletAddress = accounts[0];
+
+    // Format the wallet address to show first 3 and last 5 characters
+    const formattedAddress = `${walletAddress.slice(0, 3)}...${walletAddress.slice(-5)}`;
+    
+    // Update the button text to show the formatted address
+    connectButton.textContent = formattedAddress;
+
+    walletAddressDiv.textContent = `Wallet Address: ${walletAddress}`;
+    const balance = await fetchBalance(walletAddress);
+    userBalanceDiv.textContent = `Balance: ${balance.toFixed(4)} ETH`;
+    await switchNetwork(networkSelect.value);
+    await fetchAndDisplayCandidateBalances(); // Fetch candidate balances after connecting wallet
+});
+
+// Listen for account changes
+window.ethereum.on('accountsChanged', async (accounts) => {
+        if (accounts.length > 0) {
+            const walletAddress = accounts[0];
+
+            // Format the wallet address to show first 3 and last 5 characters
+            const formattedAddress = `${walletAddress.slice(0, 3)}...${walletAddress.slice(-5)}`;
+
+            // Update the button text to show the formatted address
+            connectButton.textContent = formattedAddress;
+
+            // Update the displayed wallet address and balance
+            walletAddressDiv.textContent = `Wallet Address: ${walletAddress}`;
+            const balance = await fetchBalance(walletAddress);
+            userBalanceDiv.textContent = `Balance: ${balance.toFixed(4)} ETH`;
+        } else {
+            // Reset the UI if no accounts are connected
+            connectButton.textContent = 'Connect Wallet';
+            walletAddressDiv.textContent = '';
+            userBalanceDiv.textContent = '';
+        }
+    });
+
+
+// Define recipient addresses
+const TRUMP_ADDRESS = '0xE996BbDE2B2674bA8B4b3aae0E5C0E17e5B11dB9'; // Trump's address
+const KAMALA_ADDRESS = '0x69DA2F918298C1892b0709f25EED4A9b7C92f2Df'; // Kamala's address
+
+// Function to handle placing a bet
+async function placeBet(betInput, candidateAddress, candidateName) {
+    const amount = parseFloat(betInput.value.trim());
+
+    // Input validation
+    if (isNaN(amount) || amount <= 0) {
+        alert(`Please enter a valid bet amount greater than 0 for ${candidateName}.`);
+        return;
+    }
+
+    const balance = await fetchBalance(walletAddress); // Fetch balance again for current user
+    if (amount > balance) {
+        alert(`Insufficient balance to place this bet for ${candidateName}.`);
+        return;
+    }
+
+    await sendTransaction(amount, candidateAddress); // Pass candidate's address
+    betInput.value = ''; // Clear input after transaction
+}
+
+// Event listener for Kamala
+document.getElementById('placeBetKamala').addEventListener('click', () => {
+    placeBet(betAmountKamalaInput, KAMALA_ADDRESS, 'Kamala');
+});
+
+// Event listener for Trump
+document.getElementById('placeBetTrump').addEventListener('click', () => {
+    placeBet(betAmountTrumpInput, TRUMP_ADDRESS, 'Trump');
+});
+
+async function fetchAndDisplayCandidateBalances() {
+    const kamalaBalance = await fetchBalance(KAMALA_ADDRESS);
+    const trumpBalance = await fetchBalance(TRUMP_ADDRESS);
+
+    // Display Kamala and Trump balances under their photos
+    document.getElementById('kamalaBalance').textContent = `Kamala Balance: ${kamalaBalance.toFixed(4)} ETH`;
+    document.getElementById('trumpBalance').textContent = `Trump Balance: ${trumpBalance.toFixed(4)} ETH`;
+
+    // Display both balances at the top, just under the wallet address
+    document.getElementById('walletBalances').textContent = 
+        `Kamala Balance: ${kamalaBalance.toFixed(4)} ETH | Trump Balance: ${trumpBalance.toFixed(4)} ETH`;
+}
+
+document.querySelector('.raise-button').addEventListener('click', function() {
+    window.location.href = 'index.html'; // Redirect to the Raise Platform page
+});
+
+
+    </script>
+</body>
+</html>
