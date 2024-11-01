@@ -1,0 +1,3709 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superchain Launchpad</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/parzivalishan/newsuper/main/assets/superchain.png" type="image/png">
+
+    
+    <!-- Ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.6.9/dist/ethers.umd.min.js"></script>
+  
+
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+ body {
+            font-family: Arial, sans-serif;
+            background-color: #0B0C0E; /* Dark black color resembling SpaceX */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            height: 100vh; /* Full height */
+            display: flex; /* Use flexbox for alignment */
+            flex-direction: column; /* Column layout */
+            align-items: flex-end; /* Align items to the right */
+            justify-content: flex-start; /* Align items to the top */
+        }
+
+        #header {
+            width: 100%; /* Full width */
+            display: flex; /* Flex layout for buttons */
+            justify-content: flex-end; /* Align buttons to the right */
+            padding: 10px; /* Padding for buttons */
+            position: absolute; /* Position absolute for top alignment */
+            top: 0; /* Align to the top */
+        }
+
+#app {
+    background: linear-gradient(135deg, rgba(35, 130, 196, 1) 0%, rgba(26, 60, 141, 1) 100%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%; /* Allows full width with a max constraint */
+    margin: 40px auto;
+    text-align: center;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #app {
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px auto;
+    }
+    
+    h1 {
+        font-size: 20px; /* Slightly smaller on small screens */
+    }
+}
+#app2 {
+    background: linear-gradient(135deg, rgba(255, 94, 77, 1) 0%, rgba(255, 209, 102, 1) 100%);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 1200px; /* A reasonable max-width for most screens */
+    width: 100%;
+    margin: 3rem auto;
+    text-align: center;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #app2 {
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 2rem auto;
+        max-width: 90%; /* Scale down width for small screens */
+    }
+}
+
+#myPieChart {
+    width: 80vw; /* Set width relative to viewport width */
+    height: 80vw; /* Maintain aspect ratio */
+    max-width: 350px; /* Limit maximum size */
+    max-height: 350px;
+}
+
+/* Responsive size adjustment for the chart on smaller screens */
+@media (max-width: 768px) {
+    #myPieChart {
+        width: 70vw; /* Slightly smaller on small screens */
+        height: 70vw;
+    }
+}
+
+#legendContainer {
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Relative to the parent, for better responsiveness */
+    margin-top: 1rem; /* Space above */
+    align-items: center; /* Center on the screen */
+}
+
+/* Adjust layout and positioning of legend for smaller screens */
+@media (max-width: 768px) {
+    #legendContainer {
+        left: 0; /* Align legend to the center */
+        top: auto; /* Remove top positioning */
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+/* Button Styles */
+#connectWalletBtn, 
+#networkBtn, 
+.connectwalletbtn {
+    display: inline-block;
+    position: relative;
+    background-color: #333; /* Simple dark background color */
+    color: #fff; /* White text for contrast */
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    letter-spacing: 0.05rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: none; /* No shadow */
+    margin: 0 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #connectWalletBtn, 
+    #networkBtn, 
+    .connectwalletbtn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        margin: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    #connectWalletBtn, 
+    #networkBtn, 
+    .connectwalletbtn {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        margin: 5px 0;
+        width: 100%; /* Full width on small screens */
+        text-align: center;
+    }
+}
+
+
+/* Wallet Dropdown Styles */
+.wallet-dropdown {
+    position: relative;
+    display: inline-block;
+    font-family: Arial, sans-serif;
+}
+
+/* Dropdown Button Styles */
+.connectwalletbtn {
+    background-color: #333; /* Solid color background */
+    color: #fff; /* White text */
+    text-decoration: none;
+    text-transform: uppercase;
+    border: none;
+    letter-spacing: 0.05rem;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Dropdown Content Styles */
+.wallet-dropdown .dropdown-content {
+    display: none; /* Initially hidden */
+    position: absolute; /* Position below the dropdown button */
+    top: 100%;
+    right: 0;
+    background-color: #27272C; /* Solid background */
+    color: #ffffff;
+    min-width: 200px;
+    max-width: 240px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    opacity: 0; /* Hidden state */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+}
+
+/* Show dropdown when active */
+.wallet-dropdown .dropdown-content.visible {
+    display: flex;
+    opacity: 1;
+}
+
+/* Account Display Styles */
+#accountDisplay {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+/* Dropdown Button Styles */
+.dropdown-btn {
+    background-color: #333;
+    color: #fff;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Copy Address Button */
+#copyAddressBtn {
+    border: 0;
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 8px 16px;
+    text-align: left;
+    color: #000;
+    background-color: #3399ff; /* Solid color background */
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Wallet Modal Styles */
+.walletmini {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E1E2F;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    z-index: 1000;
+    display: none;
+}
+
+.walletmini .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.walletmini p {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 14px;
+    color: #fff;
+}
+
+.walletmini button {
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .wallet-dropdown .dropdown-content {
+        min-width: 160px;
+        max-width: 200px;
+        right: -10px;
+    }
+    .wallet-dropdown .dropdown-btn{
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .wallet-dropdown .dropdown-content {
+        min-width: 140px;
+        max-width: 180px;
+        right: -15px;
+    }
+    .wallet-dropdown .dropdown-btn {
+        font-size: 0.8rem;
+        padding: 0.55rem 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .wallet-dropdown .dropdown-content {
+        min-width: 120px;
+        max-width: 150px;
+        right: -20px;
+    }
+    .wallet-dropdown .dropdown-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.8rem;
+    }
+}
+
+/* Network Select Button Styles */
+.network-select {
+    position: relative; /* Adjusted to remove absolute positioning */
+    background-color: #4CAF50; /* Solid green color for network select */
+    color: white; /* White text for contrast */
+    border: none;
+    border-radius: 6px; /* Consistent border-radius with other buttons */
+    padding: 8px 16px; /* Adjusted padding for smaller size */
+    font-size: 0.9rem; /* Smaller font size for consistency */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adding shadow for depth */
+    width: 100%; /* Full width to ensure responsiveness */
+    max-width: 250px; /* Max width to prevent excessive stretching on large screens */
+    margin: 10px auto; /* Center the button with margin */
+}
+
+/* Dropdown Container */
+.dropdown {
+    position: relative; /* Container for positioning dropdown */
+    display: inline-block; /* Inline block for proper alignment */
+    width: 100%; /* Make dropdown container full width */
+}
+
+/* Dropdown Content */
+#dropdownContent {
+    position: absolute; /* Keep it absolute */
+    top: 100%; /* Position it directly below the button */
+    left: 0; /* Align it to the left */
+    display: none; /* Hidden by default */
+    background-color: #1E1E2F; /* Solid background for dropdown */
+    border: 1px solid #ccc; /* Optional border for better visibility */
+    border-radius: 5px; /* Rounded corners */
+    z-index: 1000; /* Ensure it appears above other elements */
+    width: 100%; /* Full width for dropdown */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+/* Show dropdown when active */
+#dropdownContent.visible {
+    display: block; /* Show dropdown when active */
+}
+
+/* Dropdown Button Styles */
+#dropdownContent button {
+    border: none;
+    padding: 10px; /* Adjust padding for better appearance */
+    text-align: left; /* Align text to the left */
+    background-color: #0B0C0E; /* Same color as connect button */
+    color: white; /* Text color */
+    cursor: pointer; /* Pointer on hover */
+    margin: 0; /* No margin for dropdown items to stack vertically */
+    width: 100%; /* Make buttons full width for better alignment */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically within the button */
+}
+
+/* Button Hover Effect */
+#dropdownContent button:hover {
+    background-color: #3B82F6; /* Background color on hover */
+}
+
+/* Logo Styles */
+#dropdownContent .logo {
+    width: 24px; /* Set a fixed width for logos */
+    height: 24px; /* Set a fixed height for logos */
+    margin-right: 8px; /* Space between logo and text */
+}
+
+/* Hide the button when it is disabled */
+button:disabled {
+    display: none; /* Completely hide the button */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .network-select {
+        font-size: 0.8rem; /* Smaller font size for mobile */
+        padding: 6px 12px; /* Adjust padding for mobile */
+    }
+
+    #dropdownContent button {
+        padding: 8px; /* Adjust padding for dropdown buttons */
+        font-size: 0.8rem; /* Adjust font size for dropdown buttons */
+    }
+}
+
+
+
+/* Button Styles */
+button#sendTransactionBtn,
+button#sendSceTokenBtn {
+    padding: 12px 24px; /* Increased padding for more height */
+    font-size: 16px; /* Font size */
+    background: linear-gradient(135deg, rgba(128, 0, 128, 1) 0%, rgba(75, 0, 130, 1) 100%); /* Purple gradient background */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 20px 15px; /* Vertical space and horizontal margin for equal spacing */
+    display: inline-block; /* Allow buttons to be in-line */
+    transition: background 0.3s ease; /* Smooth background transition */
+}
+
+/* Centering the buttons */
+button#sendTransactionBtn,
+button#sendSceTokenBtn {
+    text-align: center; /* Center text inside the buttons */
+}
+
+/* Hover Effect */
+button#sendTransactionBtn:hover:not(:disabled),
+button#sendSceTokenBtn:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(75, 0, 130, 1) 0%, rgba(148, 0, 211, 1) 100%); /* Darker purple gradient for hover */
+}
+
+/* Disabled Button Styles */
+button#sendTransactionBtn:disabled,
+button#sendSceTokenBtn:disabled {
+    background: rgba(128, 0, 128, 0.5); /* Lighter purple to indicate disabled state */
+    color: rgba(255, 255, 255, 0.5); /* Lighter text color */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    button#sendTransactionBtn,
+    button#sendSceTokenBtn {
+        font-size: 14px; /* Smaller font size for mobile devices */
+        padding: 10px 20px; /* Adjust padding for smaller screens */
+    }
+}
+
+
+
+
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+
+
+:root {
+  --glow-color: #00CED1; /* Dark Turquoise */
+  --skin-color: #FAD6B8; /* Soft Peach */
+  --text-color: #333; /* Darker text color for visibility */
+}
+
+/* Parent container for positioning */
+.button-container {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    width: calc(100% - 20px); /* Adjust width to fit within padding */
+    margin-top: 10px; /* Space above the container */
+    margin-top: 25px; /* Increased space above the button container */
+
+}
+
+/* Styles for the main number input */
+input[type="number"] {
+    font-family: "Raleway", sans-serif; /* Use Raleway font */
+    padding: 15px; /* Increased padding for a larger feel */
+    border: 0.15em solid var(--glow-color); /* Border with glowing color */
+    border-radius: 0.45em; /* Rounded corners */
+    background-color: var(--skin-color); /* Skin tone background */
+    color: var(--text-color); /* Darker text color for visibility */
+    font-size: 20px; /* Increased font size */
+    line-height: 1.5; /* Increased line height for better readability */
+    text-align: center; /* Center the text inside the input box */
+    box-shadow: inset 0px 0px 0.5em var(--glow-color), 
+                0px 0px 1em var(--glow-color); /* Initial glow effect */
+    transition: all 0.3s ease; /* Smooth transition for effects */
+    outline: none; /* Remove outline on focus */
+    animation: glow-animation 1s infinite alternate; /* Glowing animation */
+    width: 100%; /* Full width to allow responsiveness */
+    max-width: 300px; /* Limit width on larger screens */
+    margin-right: 20px; /* Fixed margin to create space between input and button */
+    margin-left: 125px; /* Adjust this value to move the input right */
+}
+
+/* Hide the spinner in WebKit browsers (Chrome, Safari) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Remove default spinner in Chrome/Safari */
+    margin: 0; /* Remove margin */
+}
+
+/* Focus styling */
+input[type="number"]:focus {
+    border-color: rgba(255, 255, 255, 0.8); /* Change border color on focus */
+    box-shadow: 0 0 20px rgba(0, 206, 209, 1), 
+                inset 0px 0px 2em rgba(255, 255, 255, 0.5); /* Enhanced shadow on focus */
+}
+
+/* Placeholder text styling */
+input[type="number"]::placeholder {
+    color: rgba(51, 51, 51, 0.5); /* Light gray for placeholders */
+    font-style: italic;
+}
+
+/* Change appearance on hover */
+input:hover {
+    border-color: rgba(255, 255, 255, 1); /* Change to white on hover */
+}
+
+/* Keyframes for stronger glowing animation */
+@keyframes glow-animation {
+    from {
+        box-shadow: inset 0px 0px 0.5em var(--glow-color), 
+                    0px 0px 1em var(--glow-color);
+    }
+    to {
+        box-shadow: inset 0px 0px 1.5em var(--glow-color), 
+                    0px 0px 4em var(--glow-color); /* Increased glow intensity */
+    }
+}
+
+/* Max button styles */
+#maxButton {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 1) 0%, rgba(56, 142, 60, 1) 100%); /* Gradient background */
+    color: white; 
+    border: none; 
+    padding: 15px 25px; /* Increased padding for more height */
+    font-size: 20px; /* Increased font size */
+    line-height: 1.5; /* Increased line height */
+    cursor: pointer; 
+    border-radius: 8px; 
+}
+
+/* Hover and active states for Max button */
+#maxButton:hover {
+    background-color: #45a049; /* Slightly darker green for hover state */
+}
+
+#maxButton:active {
+    transform: scale(0.95); 
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    input[type="number"] {
+        font-size: 18px; /* Adjust font size for smaller devices */
+        padding: 12px; /* Smaller padding but still sufficient */
+    }
+
+    #maxButton {
+        font-size: 18px; /* Maintain larger font size for button */
+        padding: 12px 20px; /* Adjust padding for usability */
+    }
+}
+
+#txStatus {
+    display: none; /* Hide by default */
+    margin-top: 20px;
+    color: #333333; /* Keep original text color */
+    background-color: #ffffff; /* Keep original background color */
+    padding: 10px; /* Add some padding for better spacing */
+    border-radius: 5px; /* Rounded corners for aesthetics */
+    font-weight: bold; /* Make text bold */
+    font-size: 16px; /* Increase font size for readability */
+    overflow-wrap: break-word; /* Break long words to prevent overflow */
+    white-space: normal; /* Allow wrapping of text */
+    overflow: hidden; /* Hide overflow content to avoid scrollbars */
+    max-width: 100%; /* Ensure it doesn't exceed parent width */
+}
+
+#txStatus.show {
+    display: block; /* Show when this class is added */
+}
+
+.hidden {
+    display: none; /* Keep hidden class as is */
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker background with opacity */
+    backdrop-filter: blur(5px); /* Blur effect for the background */
+}
+
+.modal-content {
+    background-color: #36454F; /* Charcoal */
+    margin: 10% auto; /* Centered with less margin */
+    padding: 20px; /* Increased padding */
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Deeper shadow for depth */
+    width: 90%; /* Responsive width */
+    max-width: 500px; /* Maximum width for larger screens */
+    animation: fadeIn 0.3s; /* Animation for opening */
+    
+    word-wrap: break-word; /* Allow long words to break and wrap onto the next line */
+    overflow-wrap: break-word; /* Breaks long words if necessary */
+    white-space: normal; /* Allows text to wrap normally */
+}
+
+/* Animation for modal appearance */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #ff0000; /* Change color on hover */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h2 {
+    margin-top: 0; /* Remove top margin from title */
+}
+
+/* Button styles */
+button {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Loader styles */
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Transaction hash link styles */
+.modal-content a {
+    color: #00BFFF; /* Bright Blue for links */
+    text-decoration: underline; /* Underline for better visibility */
+}
+
+.modal-content a:hover {
+    color: #1E90FF; /* Lighter Blue on hover */
+}
+
+/* Center content in processing modal */
+#processingModal .modal-content {
+    text-align: center; /* Center content */
+}
+
+#ethPriceContainer {
+    display: none; /* Hides the entire paragraph */
+}
+
+
+/* Hide original progress elements */
+#progressLabel,
+#progressPercentage,
+.progress-container-original {
+    display: none; /* Hide these elements */
+}
+
+/* Custom styles for .chakra-tabs__tab class */
+#app2 .chakra-tabs__tab {
+    background-color: transparent;         /* Transparent background for tabs */
+    color: rgb(255, 0, 0);                 /* Default text color (bright red) */
+    font-size: 16px;                       /* Font size for consistency */
+    padding: 12px 24px;                    /* Padding for visual spacing */
+    border: none;                          /* No border for a cleaner look */
+    border-bottom: 2px solid transparent;  /* Invisible underline for inactive tabs */
+    border-radius: 0;                      /* No rounding for a flat look */
+    cursor: pointer;                       /* Pointer cursor on hover */
+    transition: color 0.3s ease, border-color 0.3s ease; /* Smooth transition effect */
+    margin-right: 10px;                    /* Space between tabs */
+}
+
+/* Hover effect for .chakra-tabs__tab */
+#app2 .chakra-tabs__tab:hover {
+    color: rgb(226, 232, 240);             /* Subtle color change on hover */
+}
+
+/* Active state styling for the selected tab */
+#app2 .chakra-tabs__tab[aria-selected="true"] {
+    color: rgb(150, 0, 0);                 /* Darker red for active tab */
+    border-bottom: 2px solid rgb(150, 0, 0); /* Underline effect for active tab */
+}
+
+/* Inactive tabs */
+#app2 .chakra-tabs__tab[aria-selected="false"] {
+    color: rgb(255, 0, 0);                 /* Bright red for inactive tabs */
+    border-bottom: 2px solid transparent;  /* No underline for inactive tabs */
+}
+
+/* General styles for #app2 container */
+#app2 {
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 94, 77, 1) 0%, rgba(255, 209, 102, 1) 100%);
+    padding: 40px;                         /* Spacing within the container */
+    border-radius: 15px;                   /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    max-width: 1950px;                     /* Max width for larger screens */
+    width: calc(100% - 20px);              /* Full width minus margins */
+    margin: 60px auto;                     /* Centered layout with top margin */
+}
+
+/* Header styles within #app2 container */
+#app2 h1 {
+    font-size: 2.5em;
+    margin: 0;                             /* Remove default margins */
+    padding: 0;                            /* Reset padding */
+}
+
+/* Tab list styling to ensure proper layout and spacing */
+#app2 .tab-list {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;                             /* Consistent spacing between tabs */
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    #app2 {
+        padding: 20px;                     /* Reduced padding on small screens */
+        margin: 30px auto;                 /* Adjusted margin */
+    }
+
+    #app2 h1 {
+        font-size: 2em;                     /* Smaller font size for the header */
+    }
+
+    #app2 .chakra-tabs__tab {
+        font-size: 14px;                    /* Reduced font size for tabs */
+        padding: 10px 20px;                 /* Adjusted padding for tabs */
+        margin-right: 5px;                  /* Less space between tabs */
+    }
+
+    #app2 .tab-list {
+        flex-direction: column;             /* Stack tabs vertically on small screens */
+        align-items: center;                /* Center align the stacked tabs */
+    }
+}
+
+
+.swp-container {
+    background-color: #1e1e1e; /* Darker container */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow effect */
+    padding: 40px; /* Padding inside container */
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Max width for larger screens */
+    text-align: center; /* Center text alignment */
+    margin-top: 30px; /* Add space above the container */
+}
+
+.swp-h1 {
+    font-size: 28px; /* Title size */
+    margin-bottom: 20px; /* Space below title */
+    color: #61dafb; /* Light blue title color */
+}
+
+/* Styles for .swp-input-container and its inputs */
+.swp-input-container,
+.swp-output-container {
+    display: flex;
+    flex-direction: column; /* Column layout for inputs and outputs */
+    margin-bottom: 30px; /* Increased space below input/output containers */
+    padding: 15px; /* Padding around the container */
+    background-color: #1c1c1c; /* Darker background for better contrast */
+    border-radius: 12px; /* Rounded corners for the container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+}
+
+.swp-label {
+    font-size: 18px; /* Increased label font size for better readability */
+    margin-bottom: 8px; /* Space below label */
+    color: #e0e0e0; /* Slightly brighter gray for better visibility */
+}
+
+.swp-input-wrapper {
+    position: relative; /* To position the dropdown inside */
+    width: 100%; /* Full width */
+    display: flex; /* Flex to align items */
+    align-items: center; /* Center vertically */
+}
+
+.swp-input {
+    padding: 16px; /* Adjusted padding inside input field */
+    border: 2px solid #61dafb; /* Light blue border */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 20px; /* Slightly smaller input text size for balance */
+    width: calc(100% - 100px); /* Adjust width to accommodate the dropdown */
+    background-color: #2a2a2a; /* Dark input background */
+    color: #ffffff; /* White text color */
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4); /* Inner shadow effect */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transition for border color and shadow on focus */
+    outline: none; /* Remove default outline on focus */
+}
+
+/* Focus styling for swp-input */
+.swp-input:focus {
+    border-color: #21a1f1; /* Brighter blue on focus */
+}
+
+/* Hover effect for swp-input */
+.swp-input:hover {
+    border-color: #4bc3ff; /* Lighten border on hover for feedback */
+}
+
+/* CSS to remove up/down arrows from number input */
+.swp-input[type="number"]::-webkit-inner-spin-button,
+.swp-input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Remove default styles */
+    margin: 0; /* Remove margin */
+}
+
+.swp-input[type="number"] {
+    -moz-appearance: textfield; /* Change the appearance in Firefox */
+}
+
+/* Styles for the swp-inputAmount */
+#swp-inputAmount {
+    padding: 16px; /* Padding inside input field */
+    border: 2px solid #61dafb; /* Light blue border */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 20px; /* Font size for input text */
+    width: 100%; /* Full width to match container */
+    background-color: #2a2a2a; /* Dark input background */
+    color: #ffffff; /* White text color */
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4); /* Inner shadow effect */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Transition for border color and shadow on focus */
+    outline: none; /* Remove default outline on focus */
+}
+
+/* Focus styling for swp-inputAmount */
+#swp-inputAmount:focus {
+    border-color: #21a1f1; /* Brighter blue on focus */
+    box-shadow: 0 0 5px rgba(33, 161, 241, 0.5); /* Glow effect on focus */
+}
+
+/* Hover effect for swp-inputAmount */
+#swp-inputAmount:hover {
+    border-color: #4bc3ff; /* Lighten border on hover for feedback */
+}
+
+/* Placeholder styling to match design */
+#swp-inputAmount::placeholder {
+    color: #999999; /* Gray placeholder color for better visibility */
+}
+
+.swp-custom-dropdown {
+    position: relative; /* To position the dropdown inside */
+    width: 90px; /* Fixed width for dropdown */
+}
+
+.swp-dropdown-btn {
+    padding: 15px; /* Padding inside the dropdown button */
+    border: 2px solid #61dafb; /* Light blue border */
+    border-radius: 10px; /* Rounded corners */
+    background: #1e1e1e; /* Dark button background */
+    color: #ffffff; /* White text */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer on hover */
+    display: flex; /* Flex for aligning items */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center content horizontally */
+    min-width: 70px; /* Minimum width for dropdown button */
+    height: 26px; /* Match height with input field */
+    margin-left: 10px; /* Space between input and dropdown */
+    overflow: hidden; /* Hide overflow */
+}
+
+.swp-dropdown-btn img {
+    max-width: 20px; /* Limit logo size */
+    max-height: 20px; /* Limit logo height */
+    margin-right: 5px; /* Space between logo and text */
+}
+
+.swp-dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute; /* Absolute positioning for dropdown */
+    top: 100%; /* Position below the dropdown button */
+    left: 0; /* Align to the left */
+    right: 0; /* Stretch to the right */
+    background-color: #1e1e1e; /* Dropdown background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); /* Shadow for dropdown */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.swp-dropdown-menu.visible {
+    display: block; /* Show dropdown when active */
+}
+
+.swp-dropdown-item {
+    padding: 10px; /* Padding for dropdown items */
+    color: #ffffff; /* White text */
+    display: flex; /* Flex for image and text */
+    align-items: center; /* Center items vertically */
+    cursor: pointer; /* Pointer on hover */
+}
+
+.swp-dropdown-item img {
+    width: 20px; /* Adjust logo size */
+    height: 20px; /* Ensure consistent height */
+    margin-right: 10px; /* Space between logo and text */
+}
+
+#swp-maxButton {
+    background-color: #6200ea; /* Deep purple */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 12px 24px; /* Padding */
+    margin-top: 10px; /* Space above */
+    margin-bottom: 20px; /* Extra space below the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 16px; /* Font size */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for elevation */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+#swp-maxButton:hover {
+    background-color: #3700b3; /* Darker purple on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+.swp-output-container {
+    flex-direction: row; /* Row layout for output and logo */
+    align-items: center; /* Center items vertically */
+}
+
+.swp-output {
+    padding: 15px; 
+    border: 2px solid #21a1f1; /* Bright blue border for output */
+    border-radius: 10px;
+    font-size: 22px; 
+    color: #21a1f1; /* Bright blue text */
+    background-color: #3a3a3a; /* Darker output background */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: calc(100% - 50px); /* Set width to match input box, adjusting for logo */
+    margin-right: 10px; /* Space between output box and logo */
+    text-align: right; /* Align text to the right */
+}
+
+.swp-ratio {
+    font-size: 16px; 
+    color: #dcdcdc; /* Light gray for ratio */
+    margin-top: 5px;
+}
+
+.swp-swap-btn {
+    margin-top: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #61dafb; /* Light blue button */
+    color: black; /* Black text color */
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: calc(100% - 10px); 
+}
+
+.swp-swap-btn:hover {
+    background-color: #21a1f1; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .swp-container {
+        padding: 20px; /* Reduce padding on smaller screens */
+        margin-top: 20px; /* Reduce margin on smaller screens */
+    }
+
+    .swp-h1 {
+        font-size: 24px; /* Smaller title size */
+        margin-bottom: 15px; /* Adjust space below title */
+    }
+
+    .swp-input, #swp-inputAmount, .swp-dropdown-btn, .swp-swap-btn {
+        font-size: 18px; /* Smaller font size for inputs and buttons */
+        padding: 12px; /* Reduce padding */
+    }
+
+    .swp-label {
+        font-size: 16px; /* Smaller label font size */
+    }
+
+    .swp-output {
+        font-size: 20px; /* Adjust output font size */
+    }
+}
+
+@media (max-width: 480px) {
+    .swp-container {
+        width: 95%; /* Wider on very small screens */
+    }
+
+    .swp-input-wrapper {
+        flex-direction: column; /* Stack inputs vertically */
+    }
+
+    .swp-input {
+        width: 100%; /* Full width on mobile */
+    }
+
+    .swp-dropdown-btn {
+        width: 100%; /* Full width for dropdown button */
+        margin-left: 0; /* Remove margin */
+        margin-top: 10px; /* Space above */
+    }
+
+    .swp-output {
+        width: 100%; /* Full width for output */
+        margin-right: 0; /* Remove margin */
+    }
+
+    .swp-swap-btn {
+        width: 100%; /* Full width for swap button */
+    }
+}
+
+
+
+.mini-page {
+    position: fixed; /* Make it fixed to overlay */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E1E2F; /* Dark grey background similar to ChatGPT */
+    border-radius: 8px;
+    padding: 10px; /* Add padding around the mini page */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Ensure it appears above other elements */
+    max-height: 10000px; /* Set a maximum height */
+    overflow: hidden; /* Prevent overflow from the mini page */
+}
+
+.mini-page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Ensure buttons stretch to full width */
+    max-height: 100%; /* Set to fill the mini page height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.network-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the left */
+    height: 60px; /* Set fixed height for buttons */
+    padding: 0 20px; /* Horizontal padding */
+    border: none; /* Remove default button border */
+    background-color: transparent; /* Make button background transparent */
+    color: #fff; /* Set text color */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.network-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Change background color on hover */
+}
+
+.logo {
+    width: 30px; /* Set a fixed width for logos */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Space between logo and text */
+}
+
+
+    
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+.progress-container-2 {
+    display: flex; /* Enable flexbox */
+    justify-content: center; /* Center the content horizontally */
+    width: 95%; /* Adjust width as needed */
+    margin: 0 auto; /* Center horizontally */
+    position: relative; /* Required for absolute positioning of inner elements if needed */
+}
+
+.range {
+    position: relative;
+    background-color: #333;
+    width: 100%; /* Changed to 100% for responsiveness */
+    max-width: 600px; /* Max width for larger screens */
+    height: 30px; /* Fixed height */
+    transform: skew(30deg);
+    font-family: 'Orbitron', monospace; /* Ensure this is applied correctly */
+    
+    &:before {
+        --width: calc(var(--p) * 1%);
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--width); /* Use the CSS variable here */
+        height: 100%;
+        background-color: #F3E600; /* Progress color */
+        z-index: 0; /* Behind the label */
+        animation: load 10s forwards linear, glitch 20s infinite linear; /* Animation duration adjusted */
+    }
+    
+    .range__label {
+        position: absolute; /* Position absolutely for custom placement */
+        top: 50%; /* Center vertically */
+        left: 5%; /* Move text towards the right side */
+        transform: translateY(-50%) skew(-30deg); /* Center vertically and apply skew effect */
+        color: #000080; /* Text color for percentage display */
+        z-index: 1; /* Ensure text is above the progress bar */
+    }
+}
+
+@keyframes load {
+    to {
+        width: var(--width); /* Animate to full width based on percentage */
+    }
+}
+
+@keyframes glitch {
+    0%, 5% {
+        transform: translate(0, 0);
+    }
+    1% {
+        transform: translate(-5%, -10%);
+    }
+    2% {
+        transform: translate(10%, 30%);
+    }
+    3% {
+        transform: translate(-43%, 10%);
+    }
+    4% {
+        transform: translate(2%, -23%);
+    }
+}
+
+#raisedAmount, #tokenBalance {
+    margin-right: 10px; /* Optional: add space between the elements */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .progress-container-2 {
+        flex-direction: column; /* Stack vertically on smaller screens */
+        align-items: center; /* Center items horizontally */
+    }
+
+    .range {
+        height: 25px; /* Adjust height for smaller screens */
+    }
+
+    .range__label {
+        font-size: 14px; /* Smaller font size for label */
+        left: 10%; /* Adjust position for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .range {
+        height: 20px; /* Further reduce height for mobile */
+    }
+
+    .range__label {
+        font-size: 12px; /* Smaller font size for label */
+        left: 15%; /* Further adjust position for smaller screens */
+    }
+
+    #raisedAmount, #tokenBalance {
+        margin-right: 5px; /* Reduce space for smaller screens */
+    }
+}
+
+
+
+
+.button-link {
+    display: block; /* Stacks links vertically */
+    margin: 10px 0; /* Space between links */
+    color: #FF6F61; /* Unique link color */
+    text-decoration: none; /* Remove underline */
+    font-size: 16px; /* Adjust font size */
+    transition: color 0.3s ease; /* Smooth color transition */
+    cursor: default; /* Change cursor to default to indicate it's not a link */
+}
+
+.button-link:hover {
+    text-decoration: none; /* No underline on hover */
+    color: #D76D6D; /* Darker, complementary color on hover */
+    cursor: default; /* Keep cursor default on hover */
+}
+
+
+
+/* Loader Animation */
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.disabled {
+    color: gray; /* Change text color to gray */
+    pointer-events: none; /* Prevent clicks */
+    opacity: 0.5; /* Faded appearance */
+}
+
+.info-container {
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Align items vertically */
+}
+
+footer {
+    background: none; /* Remove background color */
+    color: white; /* Text color */
+    padding: 20px; /* Footer padding */
+    text-align: center; /* Center text */
+    width: calc(100% - 40px); /* Full width minus margins */
+    margin-top: 60px; /* Space above footer */
+    position: relative; /* Positioning for absolute children */
+}
+
+.footer-container {
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Space between items */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    background: transparent; /* Transparent background */
+}
+
+.footer-container div {
+    flex: 1; /* Allow each section to grow */
+    margin: 10px; /* Margin around sections */
+    background: transparent; /* No background color on divs */
+}
+
+
+
+
+
+
+
+
+/* Animation styles for each section */
+#one {
+    animation: one 5s ease-in-out infinite alternate;
+}
+
+#two {
+    width: 90%;
+    animation: two 4s ease-in-out infinite alternate;
+}
+
+#three {
+    width: 80%;
+    animation: three 3s ease-in-out infinite alternate;
+}
+
+#four {
+    width: 70%;
+    animation: four 2s ease-in-out infinite alternate;
+}
+
+#five {
+    width: 60%;
+    animation: five 1s ease-in-out infinite alternate;
+}
+
+/* Keyframes for animations - unchanged */
+@keyframes one {
+    from { box-shadow: 0 0 250px 20px #473C78; }
+    to { box-shadow: 0 0 100px 15px #F72A3B; }
+}
+
+@keyframes two {
+    from { box-shadow: 0 0 250px 20px #18C499; }
+    to { box-shadow: 0 0 100px 15px #D8F05E; }
+}
+
+@keyframes three {
+    from { box-shadow: 0 0 250px 20px #FFDD00; }
+    to { box-shadow: 0 0 100px 15px #3E33FF; }
+}
+
+@keyframes four {
+    from { box-shadow: 0 0 250px 20px #781848; }
+    to { box-shadow: 0 0 100px 15px #F2BBE9; }
+}
+
+@keyframes five {
+    from { box-shadow: 0 0 250px 20px #42F2A1; }
+    to { box-shadow: 0 0 100px 15px #F4F6AD; }
+}
+
+/* Optional padding for content above footer (adjust as needed) */
+.content-wrap {
+    padding-bottom: calc(80px + [footer height]); /* Adjust this value based on footer height */
+}
+
+
+
+    </style>
+</head>
+<body>
+    
+    <div id="header">
+
+
+
+        <button id="networkBtn">Network</button> <!-- Network button -->
+
+        <div id="miniPage" class="mini-page" style="display: none;">
+            <div class="mini-page-content">
+                <button id="lineaNetworkBtn" class="network-button">
+                    <img src="https://sepolia.lineascan.build/assets/linea/images/svg/logos/chain-light.svg?v=24.10.4.0" alt="Linea Logo" class="logo" />
+                    Linea
+                </button>
+                
+                <button id="sepoliaNetworkBtn" class="network-button">
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' fill='none'><path fill='%2325292E' fill-rule='evenodd' d='M14 28a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z' clip-rule='evenodd'/><path fill='url(%23a)' fill-opacity='.3' fill-rule='evenodd' d='M14 28a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z' clip-rule='evenodd'/><path fill='url(%23b)' d='M8.19 14.77 L14 18.21l5.8-3.44-5.8 8.19-5.81-8.19Z'/><path fill='%23fff' d='m14 16.93-5.81-3.44L14 4.34l5.81 9.15L14 16.93Z'/><defs><linearGradient id='a' x1='0' x2='14' y1='0' y2='28' gradientUnits='userSpaceOnUse'><stop stop-color='%23fff'/><stop offset='1' stop-color='%23fff' stop-opacity='0'/></linearGradient><linearGradient id='b' x1='14' x2='14' y1='14.77' y2='22.96' gradientUnits='userSpaceOnUse'><stop stop-color='%23fff'/><stop offset='1' stop-color='%23fff' stop-opacity='.9'/></linearGradient></defs></svg>" alt="Sepolia Logo" class="logo" />
+                    Sepolia
+                </button>
+                
+                <!-- You can add more network buttons here -->
+            </div>
+        </div>
+        
+        <div class="wallet-dropdown">
+            <button id="connectWalletBtn" class="connectwalletbtn">Connect Wallet</button>
+            <div class="walletmini" id="walletMini">
+                <!-- Close button as SVG only -->
+                <svg class="close-btn" id="closeWalletMini" width="20" height="20" viewBox="0 0 20 20" style="cursor: pointer;">
+                    <path d="M2.13388 0.366117C1.64573 -0.122039 0.854272 -0.122039 0.366117 0.366117C-0.122039 0.854272 -0.122039 1.64573 0.366117 2.13388L3.98223 5.75L0.366117 9.36612C-0.122039 9.85427 -0.122039 10.6457 0.366117 11.1339C0.854272 11.622 1.64573 11.622 2.13388 11.1339L5.75 7.51777L9.36612 11.1339C9.85427 11.622 10.6457 11.622 11.1339 11.1339C11.622 10.6457 11.622 9.85427 11.1339 9.36612L7.51777 5.75L11.1339 2.13388C11.622 1.64573 11.622 0.854272 11.1339 0.366117C10.6457 -0.122039 9.85427 -0.122039 9.36612 0.366117L5.75 3.98223L2.13388 0.366117Z" fill="currentColor"></path>
+                </svg>
+        
+                <p>Your Balance</p>
+                <div id="accountDisplay" style="margin-top: 1px;">
+                    <p style="display: flex; align-items: center; gap: 5px;">
+                        <img src="https://token-icons.s3.amazonaws.com/eth.png" 
+                             alt="ETH Logo" 
+                             style="width: 20px; height: 20px;">
+                        <span id="balanceAmount">0.00</span>
+                    </p>
+                    <p style="display: flex; align-items: center; gap: 5px;">
+                        <img src="https://tether.to/images/logoMarkGreen.svg" 
+                             alt="USDT Logo" 
+                             style="width: 20px; height: 20px;">
+                        <span id="tokenBalanceAmount">0.00</span>
+                    </p>
+                </div>
+        
+<!-- Copy Address as a clickable div -->
+<div id="copyAddressBtn" style="font-size: 20px; display: flex; align-items: center; padding: 10px; background-color: #424242; border-radius: 5px; cursor: pointer;" onclick="copyAddress()">
+    <span style="margin-right: 8px;">Copy Address</span> <!-- Add margin to separate text from SVG -->
+    <svg width="20" height="20" viewBox="0 0 20 20">
+        <path d="M3.04236 12.3027H4.18396V13.3008C4.18396 14.8525 5.03845 15.7002 6.59705 15.7002H13.6244C15.183 15.7002 16.0375 14.8525 16.0375 13.3008V6.24609C16.0375 4.69434 15.183 3.84668 13.6244 3.84668H12.4828V2.8418C12.4828 1.29688 11.6283 0.442383 10.0697 0.442383H3.04236C1.48376 0.442383 0.629272 1.29004 0.629272 2.8418V9.90332C0.629272 11.4551 1.48376 12.3027 3.04236 12.3027ZM3.23376 10.5391C2.68689 10.5391 2.39294 10.2656 2.39294 9.68457V3.06055C2.39294 2.47949 2.68689 2.21289 3.23376 2.21289H9.8783C10.4252 2.21289 10.7191 2.47949 10.7191 3.06055V3.84668H6.59705C5.03845 3.84668 4.18396 4.69434 4.18396 6.24609V10.5391H3.23376ZM6.78845 13.9365C6.24158 13.9365 5.94763 13.6699 5.94763 13.0889V6.45801C5.94763 5.87695 6.24158 5.61035 6.78845 5.61035H13.433C13.9799 5.61035 14.2738 5.87695 14.2738 6.45801V13.0889C14.2738 13.6699 13.9799 13.9365 13.433 13.9365H6.78845Z" fill="currentColor"></path>
+    </svg>
+</div>
+
+
+<!-- Copy address modal -->
+<div id="copyaddressmodal" style="display:none;">Wallet address copied to clipboard!</div>
+
+<!-- View in Explorer as a clickable div -->
+<div id="viexplorer"style="font-size: 20px; display: flex; align-items: center; padding: 10px; background-color: #424242; border-radius: 5px; cursor: pointer;" onclick="viewInExplorer()">View in Explorer ↗</div>
+
+            </div>
+        </div>
+        
+        
+
+
+            
+        </div>
+</div>
+
+
+</div>
+
+<div id="app2">
+    <h1>Vitalik Token IDO</h1>
+
+
+
+    <div role="tablist" aria-orientation="horizontal" class="tab-list">
+        <button type="button" id="project-info-tab" role="tab" tabindex="0" aria-selected="true" aria-controls="project-info-panel" class="chakra-tabs__tab" data-index="0" onclick="showInfo(1)">Project Info</button>
+        <button type="button" id="tokenomics-tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="tokenomics-panel" class="chakra-tabs__tab" data-index="1" onclick="showInfo(2)">Tokenomics & Unlocks</button>
+        <button type="button" id="vesting-schedule-tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="vesting-schedule-panel" class="chakra-tabs__tab" data-index="2" onclick="showInfo(3)">Vesting Schedule</button>
+        <button type="button" id="audit-listing-tab" role="tab" tabindex="-1" aria-selected="false" aria-controls="audit-listing-panel" class="chakra-tabs__tab" data-index="3" onclick="showInfo(4)">Audit & Listing Plan</button>
+    </div>
+
+
+    
+
+    <script>
+        // Function to handle tab switching
+        function showInfo(index) {
+            const tabs = document.querySelectorAll('[role="tab"]');
+                const infoSections = [document.getElementById('info1'), document.getElementById('info2'), document.getElementById('info3'), document.getElementById('info4')];
+
+                tabs.forEach((tab, i) => {
+                    if (i === index - 1) {
+                        // Set active state attributes
+                        tab.setAttribute('aria-selected', 'true');
+                        tab.setAttribute('tabindex', '0'); // Make active tab focusable
+                        tab.classList.add('active'); // Add class for active tab
+                        tab.classList.remove('inactive'); // Ensure inactive class is removed
+                        tab.focus(); // Optionally focus on the active tab
+                        
+                        // Show the corresponding info section
+                        infoSections[i].style.display = 'block'; // Show the selected info section
+                        console.log(`Switched to tab: ${tab.innerText} (Index: ${i}, aria-selected: true)`);
+                    } else {
+                        // Set inactive state attributes
+                        tab.setAttribute('aria-selected', 'false');
+                        tab.setAttribute('tabindex', '-1'); // Make inactive tabs not focusable
+                        tab.classList.remove('active'); // Remove class for active tab
+                        tab.classList.add('inactive'); // Add class for inactive tab
+                        infoSections[i].style.display = 'none'; // Hide other info sections
+                        
+                        // Log the inactive tab information
+                        console.log(`Tab deactivated: ${tab.innerText} (Index: ${i}, aria-selected: false)`);
+                    }
+                });
+            }
+        </script>
+        
+    
+    
+
+
+
+
+<!-- Project Information -->
+<div id="infoContainer" style="margin-top: 80px;">
+    <!-- Content for Button 1 -->
+    <div id="info1" style="display: block;">
+        <h2>About the Project</h2>
+        <p>
+            Vitalik L1 Dog inu with a library of 30+ Art under 25 planning to generate revenue from advertisements and micro transactions that are shared with other cyberpunks. Token utility includes L1 gas fees and Ftx Bankruptcy purchase currency for all game related NFTs. Players can play any game, use the same digital assets in multiple games and be rewarded daily for the activities. Web 2.5 infrastructure enables access to 3 billion players.
+        </p>
+        <h2>Meet the Team</h2>
+        <ul>
+            <li><strong>Do Kwon</strong> - CEO & Founder</li>
+            <li><strong>Sam Bankman Fried</strong> - CTO & Co-Founder</li>
+            <li><strong>Su Zhu</strong> - Marketing Director</li>
+        </ul>
+
+        <!-- Image Slider -->
+        <div class="slider-container">
+            <div class="slider">
+                <div class="slide">
+                    <img src="https://metlabs.io/wp-content/uploads/2023/12/vitalik-buterin-quien-es-ethereum-fundador.jpeg" alt="Vitalik">
+                </div>
+                <div class="slide">
+                    <img src="https://image.cnbcfm.com/api/v1/image/107124846-1664272751818-gettyimages-1240079650-SKOREA_TERRAFORM_LABS.jpeg?v=1718386712&w=1480&h=833&ffmt=webp&vtcrop=y" alt="Project Image 2">
+                </div>
+                <div class="slide">
+                    <img src="https://assets.bwbx.io/images/users/iqjWHBFdfxIU/iYN5EPQl3XPA/v0/1400x934.webp" alt="Project Image 3">
+                </div>
+                <div class="slide">
+                    <img src="https://pbs.twimg.com/media/GYLSo3nXkAAZBtb?format=jpg&name=900x900" alt="Project Image 4">
+                </div>
+                <div class="slide">
+                    <img src="https://raw.githubusercontent.com/yourusername/yourrepo/main/path/to/image5.jpg" alt="Project Image 5">
+                </div>
+            </div>
+            <!-- Navigation Divs (replacing buttons) -->
+            <div class="prev slide-control" onclick="moveSlide(-1)">&#10094;</div>
+            <div class="next slide-control" onclick="moveSlide(1)">&#10095;</div>
+        </div>
+        
+
+        <div id="socialMediaLinks" style="margin-top: 20px; display: block;">
+            <h2>Vitalik L1 Socials</h2>
+            
+            <!-- Website Icon -->
+            <a href="https://www.yourwebsite.com/" target="_blank" style="margin-right: 10px;">
+              <svg fill="#000000" width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.51211712,15 L8.17190229,15 C8.05949197,14.0523506 8,13.0444554 8,12 C8,10.9555446 8.05949197,9.94764942 8.17190229,9 L3.51211712,9 C3.18046266,9.93833678 3,10.9480937 3,12 C3,13.0519063 3.18046266,14.0616632 3.51211712,15 L3.51211712,15 Z M3.93551965,16 C5.12590433,18.3953444 7.35207678,20.1851177 10.0280093,20.783292 C9.24889451,19.7227751 8.65216136,18.0371362 8.31375067,16 L3.93551965,16 L3.93551965,16 Z M20.4878829,15 C20.8195373,14.0616632 21,13.0519063 21,12 C21,10.9480937 20.8195373,9.93833678 20.4878829,9 L15.8280977,9 C15.940508,9.94764942 16,10.9555446 16,12 C16,13.0444554 15.940508,14.0523506 15.8280977,15 L20.4878829,15 L20.4878829,15 Z M20.0644804,16 L15.6862493,16 C15.3478386,18.0371362 14.7511055,19.7227751 13.9719907,20.783292 C16.6479232,20.1851177 18.8740957,18.3953444 20.0644804,16 L20.0644804,16 Z M9.18440269,15 L14.8155973,15 C14.9340177,14.0623882 15,13.0528256 15,12 C15,10.9471744 14.9340177,9.93761183 14.8155973,9 L9.18440269,9 C9.06598229,9.93761183 9,10.9471744 9,12 C9,13.0528256 9.06598229,14.0623882 9.18440269,15 L9.18440269,15 Z M9.3349823,16 C9.85717082,18.9678295 10.9180729,21 12,21 C13.0819271,21 14.1428292,18.9678295 14.6650177,16 L9.3349823,16 L9.3349823,16 Z M3.93551965,8 L8.31375067,8 C8.65216136,5.96286383 9.24889451,4.27722486 10.0280093,3.21670804 C7.35207678,3.81488234 5.12590433,5.60465556 3.93551965,8 L3.93551965,8 Z M20.0644804,8 C18.8740957,5.60465556 16.6479232,3.81488234 13.9719907,3.21670804 C14.7511055,4.27722486 15.3478386,5.96286383 15.6862493,8 L20.0644804,8 L20.0644804,8 Z M9.3349823,8 L14.6650177,8 C14.1428292,5.03217048 13.0819271,3 12,3 C10.9180729,3 9.85717082,5.03217048 9.3349823,8 L9.3349823,8 Z M12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 Z"/>
+              </svg>
+            </a>
+            
+            <!-- Twitter Icon -->
+            <a href="https://x.com/" target="_blank" style="margin-right: 10px;">
+              <svg fill="#000000" width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+                <path d="M22,5.8a8.49,8.49,0,0,1-2.36.64,4.13,4.13,0,0,0,1.81-2.27,8.21,8.21,0,0,1-2.61,1,4.1,4.1,0,0,0-7,3.74A11.64,11.64,0,0,1,3.39,4.62a4.16,4.16,0,0,0-.55,2.07A4.09,4.09,0,0,0,4.66,10.1,4.05,4.05,0,0,1,2.8,9.59v.05a4.1,4.1,0,0,0,3.3,4A3.93,3.93,0,0,1,5,13.81a4.9,4.9,0,0,1-.77-.07,4.11,4.11,0,0,0,3.83,2.84A8.22,8.22,0,0,1,3,18.34a7.93,7.93,0,0,1-1-.06,11.57,11.57,0,0,0,6.29,1.85A11.59,11.59,0,0,0,20,8.45c0-.17,0-.35,0-.53A8.43,8.43,0,0,0,22,5.8Z"/>
+              </svg>
+            </a>
+          
+            <!-- Telegram Icon -->
+            <a href="https://telegram.org/" target="_blank" style="margin-right: 10px;">
+              <svg fill="#000000" width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.99432,2a10,10,0,1,0,10,10A9.99917,9.99917,0,0,0,11.99432,2Zm3.17951,15.15247a.70547.70547,0,0,1-1.002.3515l-2.71467-2.10938L9.71484,17.002a.29969.29969,0,0,1-.285.03894l.334-2.98846.01069.00848.00683-.059s4.885-4.44751,5.084-4.637c.20147-.189.135-.23.135-.23.01147-.23053-.36152,0-.36152,0L8.16632,13.299l-2.69549-.918s-.414-.1485-.453-.475c-.041-.324.46649-.5.46649-.5l10.717-4.25751s.881-.39252.881.25751Z"/>
+              </svg>
+            </a>
+          </div>
+          
+          
+    </div>
+
+    <!-- Content for Button 2 (Empty) -->
+    <div id="info2" style="display: none;">
+        <h2>Token Allocation</h2>
+
+        <!-- Smaller Pie Chart Canvas -->
+        <div id="pieChartContainer" style="margin-top: 20px; display: block;">
+            <canvas id="myPieChart" width="2" height="2" style="max-width: 100%;"></canvas>
+            <div id="legendContainer" style="display: flex; flex-wrap: wrap; margin-top: 10px;"></div> <!-- Legend Container -->
+        </div>
+    </div>
+
+    <!-- Content for Button 3 (Empty) -->
+    <div id="info3" style="display: none;">
+        <h2>Vesting Information</h2>
+        <p>15% TGE, 1 month cliff, Monthly unlock for the next 5 months (17% each month)</p>
+    </div>
+
+    <!-- Content for Button 4 (Empty) -->
+    <div id="info4" style="display: none;">
+        <h1>Tge 1 January 10 am UTC</h1>
+        <h1>Token Claim at 9:55 am UTC</h1>
+        <h1>Listing on Dex</h1>
+    </div>
+
+</div>
+
+<script>
+
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        const slides = document.querySelectorAll(".slide");
+        // Ensures the index is within bounds
+        if (index >= slides.length) {
+            currentSlide = 0; // Go to the first slide
+        } else if (index < 0) {
+            currentSlide = slides.length - 1; // Go to the last slide
+        } else {
+            currentSlide = index;
+        }
+
+        // Move the slider by setting the transform property
+        const slider = document.querySelector(".slider");
+        slider.style.transform = `translateX(${-currentSlide * 100}%)`;
+    }
+
+    function moveSlide(step) {
+        showSlide(currentSlide + step);
+    }
+
+    // Initialize the slider to show the first slide
+    showSlide(currentSlide);
+
+
+
+
+
+
+
+
+
+// Function to show additional information based on button clicks
+function showDetailedInfo(buttonNumber) {
+    // Hide all info sections
+    document.getElementById('info1').style.display = 'none';
+    document.getElementById('info2').style.display = 'none';
+    document.getElementById('info3').style.display = 'none';
+    document.getElementById('info4').style.display = 'none';
+
+    // Hide pie chart and social links by default
+    document.getElementById('pieChartContainer').style.display = 'none';
+    document.getElementById('socialMediaLinks').style.display = 'none';
+
+    // Show the selected info section
+    if (buttonNumber === 1) {
+        document.getElementById('info1').style.display = 'block';
+        document.getElementById('pieChartContainer').style.display = 'block';
+        document.getElementById('socialMediaLinks').style.display = 'block';
+    } else if (buttonNumber === 2) {
+        document.getElementById('info2').style.display = 'block';
+    } else if (buttonNumber === 3) {
+        document.getElementById('info3').style.display = 'block';
+    } else if (buttonNumber === 4) {
+        document.getElementById('info4').style.display = 'block';
+    }
+}
+
+// Initialize the pie chart with some default data
+const ctx = document.getElementById('myPieChart').getContext('2d');
+let myPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Private Sale', 'IDO', 'Liquidity', 'Team'],
+        datasets: [{
+            label: 'Token Distribution',
+            data: [30, 40, 20, 10],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        const total = tooltipItem.chart.data.datasets[0].data.reduce((a,b) => a + b);
+                        const currentValue = tooltipItem.raw;
+                        const percentage = ((currentValue / total) *100).toFixed(2) + '%';
+                        return `${tooltipItem.label}: ${percentage}`;
+                    }
+                }
+            }
+        },
+        animation: {
+            animateRotate: true,
+            animateScale: true,
+        },
+        cutoutPercentage:0
+    }
+});
+
+// Create custom legend below the chart
+const legendContainer = document.getElementById('legendContainer');
+myPieChart.data.labels.forEach((label,index) => {
+    const colorBox = document.createElement('span');
+    colorBox.style.display='inline-block';
+    colorBox.style.width='15px';
+    colorBox.style.height='15px';
+    colorBox.style.backgroundColor=myPieChart.data.datasets[0].backgroundColor[index];
+    colorBox.style.borderRadius='3px';
+    colorBox.style.marginRight='10px';
+
+    const labelText=document.createElement('span');
+    labelText.textContent=label;
+    labelText.style.marginRight='20px';
+    labelText.style.fontWeight='bold';
+
+    const legendItem=document.createElement('div');
+    legendItem.style.display='flex';
+    legendItem.style.alignItems='center';
+
+    legendItem.appendChild(colorBox);
+    legendItem.appendChild(labelText);
+
+    legendContainer.appendChild(legendItem);
+});
+
+// Example to update the pie chart dynamically
+setTimeout(() => {
+   const newData=[20,30,25,25];
+   myPieChart.data.datasets[0].data=newData;
+   myPieChart.update();
+},5000);
+</script>
+
+<style>
+    .slider-container {
+       position: relative;
+       width: 100%;
+       max-width: 600px; /* Maximum width of the slider */
+       margin: auto;
+       overflow: hidden; /* Hide overflow to prevent scrollbars */
+    }
+    
+    .slider {
+       display: flex;
+       transition: .5s ease; /* Smooth transition for sliding effect */
+    }
+    
+    .slide {
+       min-width: 100%; /* Each slide takes full width of the container */
+       height: 400px; /* Fixed height for all slides */
+       box-sizing: border-box;
+       overflow: hidden; /* Hide overflow for images */
+    }
+    
+    .slide img {
+       width: 100%; /* Make image fill the slide width */
+       height: 100%; /* Make image fill the slide height */
+       object-fit: cover; /* Cover to maintain aspect ratio and fill the box */
+       display: block; /* Remove any bottom space in images */
+    }
+    
+    .prev, .next {
+       cursor: pointer;
+       position: absolute;
+       top: 50%;
+       padding: 16px;
+       color: white;
+       font-weight: bold;
+       font-size: 18px;
+       transition: .3s ease;
+       z-index: 1; /* Ensure buttons are above the slider */
+    }
+    
+    .prev { left: 10px; }
+    .next { right: 10px; }
+    
+    .slide-button:hover {
+       background-color: rgba(0, 0, 0, .5);
+       transform: scale(1.1);
+    }
+</style>
+    
+</div>
+    
+    
+    <div id="app" style="font-family: 'Montserrat', sans-serif; color: #111;">
+        <h1>Purchase Your VL1 </h1>
+    
+        <div id="accountDisplay" class="hidden">
+            <p>
+                ETH Balance: <span id="balanceAmount"></span>  
+                USDS Balance: <span id="tokenBalanceAmount"></span> 
+            </p>
+        </div>
+        
+        <p id="walletStatus" class="hidden">Please switch to Linea network</p>
+    
+        <div id="crypto-info">
+
+
+            <div id="results">
+                <p>
+                  <span id="totalUsdSent">$0.00</span> 
+                    (<span id="totalEthSent">0</span> ETH and 
+                    <span id="totalTokensSent">0</span> USDS)
+                </p>
+            </div>
+            
+<!-- Modal Structure -->
+<div id="customAlert" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalMessage"></p>
+        <button onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+
+<!-- Processing Modal -->
+<div id="processingModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>Processing...</h2>
+        <p>Please confirm the transaction in your metamask</p>
+        <div class="loader"></div> <!-- Optional loading spinner -->
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Error</h2>
+        <p id="errorMessage"></p>
+        <button id="okButton">OK</button> <!-- OK Button -->
+    </div>
+</div>
+
+            <h2></h2>
+            <p id="ethPriceContainer">Current Price ETH: <span id="ethPrice">Fetching...</span></p>
+
+
+            <p><span id="usdAmountRaised">0.00</span></p>
+
+
+            <div class="info-container">
+                <p id="raisedAmount" class="hidden">
+                    Raised Amount: <span id="raisedEthAmount">0.01</span> ETH (~$<span id="raisedUsdAmount">0.00</span>)
+                </p>
+                <p id="tokenBalance">|     Token Balance: 0 Tokens</p>
+            </div>
+    
+
+            
+    
+            <p>Percentage Raised: <span id="percentageRaised">0%</span></p>
+            <div class="progress-container-2">
+                <div class="range" style="--p: 0;">
+                    <div class="range__label">Progress</div>
+                </div>
+            </div>
+
+            
+            
+            <div id="result"></div>
+            <div id="debug"></div>
+            <div id="loading" class="loader" style="display: none;"></div>
+            
+            <label for="progressScale" id="progressLabel">Sale Progress:</label>
+            <span id="progressPercentage">0%</span>
+            <div class="progress-container-original">
+                <progress id="progressScale" value="0" max="100"></progress>
+            </div>
+    
+            <input type="text" id="recipientAddress" placeholder="Recipient Address" value="0xad3a5DdCe484251f8839f185896b14605b8dd340">
+    
+            <div class="button-container">
+                <input type="number" id="amountToSend" placeholder="Amount to Send ">
+                <button id="maxButton">Max</button>
+            </div>
+
+
+            <!--          enabled code  <button id="sendTransactionBtn"  >-->
+                  <!--          disbled code  <button id="sendTransactionBtn" disbaled >-->
+
+
+            <button id="sendTransactionBtn"   > 
+                <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="ETH Logo" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                Send
+            </button>
+
+
+     <!--          enabled code  <button id="sendSceTokenBtn" >               -->
+    <!--          disbled code    <button id="sendSceTokenBtn" disabled>      -->
+
+            <button id="sendSceTokenBtn"   > <!-- button id="sendSceTokenBtn" disabled -->
+                <img src="https://tether.to/images/logoMarkGreen.svg" alt="SCE Logo" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                Send 
+            </button>
+            
+        </div>
+    
+        <div id="txStatus"></div>
+
+
+
+        <div class="swp-container">
+            <div id="chainId">Not connected</div>
+
+
+
+            <h1>Purchase Your VL1</h1>
+            
+            <div class="swp-ratio">1 USD = 5 VL1 Ratio</div>
+
+           
+            <div class="swp-ratio">
+                <p>Your Max Buy Limit in USD : <span id="maxBuyLimit">0.00</span></p>
+                <p> Eth price for this ido is set at 2000 </p>
+            </div>
+
+            <p></p>
+            
+            <div class="swp-input-container">
+                <label for="swp-inputAmount" style="display: none;"></label>
+                
+                <div class="swp-input-wrapper">
+                    <input type="text" id="swp-inputAmount" placeholder="Enter $ value "
+                           autocomplete="off" 
+                           oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\..*/g, '$1'); 
+                                     document.getElementById('amountToSend').value = this.value;" />
+
+                                     
+       
+       <div class="swp-custom-dropdown">
+        <div class="swp-dropdown-btn" id="swp-dropdownBtn">
+            <img id="swp-selectedLogo" src="https://tether.to/images/logoMarkGreen.svg" alt="Token Logo" />
+            <span id="swp-selectedOption">USDT</span>
+        </div>
+        <div class="swp-dropdown-menu" id="swp-dropdownMenu">
+            <div class="swp-dropdown-item" data-value="option1">
+                <img src="https://tether.to/images/logoMarkGreen.svg" alt="USDT Logo" />
+                USDT
+            </div>
+
+            <!--  <div class="swp-dropdown-item disabled" data-value="option2 > -->
+
+
+            <div class="swp-dropdown-item "  data-value="option2">
+                <img src="https://raw.githubusercontent.com/parzivalishan/newsuper/e878707eac174405c16eab4f9b455cbb08952248/assets/eth-logo.svg" alt="ETH Logo" />
+                ETH 
+            </div>
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+            <div>
+            <!-- New Max Button -->
+            <button id="swp-maxButton" onclick="maxButton()">Max</button>
+        </div>
+
+<!-- Hidden field to hold the calculated maximum amount -->
+<input type="hidden" id="amountToSend" />
+
+
+
+
+
+            <div class="swp-output-container">
+                <div class="swp-output" id="swp-outputAmount">0</div>
+
+                <div class="swp-dropdown-btn" id="swp-dropdownBtn">
+                    <img id="swp-selectedLogo" src="https://coin-images.coingecko.com/coins/images/24383/large/apecoin.jpg?1696523566" alt="Token Logo" />
+                    <span id="swp-selectedOption">VL1</span>
+
+
+                </div>
+            </div>
+
+
+
+            
+            
+      
+            <button id="swp-sendSceTokenBtn" class="swp-swap-btn">
+                Send USDT
+                <img src="https://tether.to/images/logoMarkGreen.svg" alt="USDT Logo" style="height: 35px; vertical-align: middle; margin-left: 5px;">
+            </button>
+            
+
+
+
+            
+        </div>
+        
+
+
+
+        <script>
+
+
+
+
+document.getElementById('networkBtn').addEventListener('click', function() {
+    const miniPage = document.getElementById('miniPage');
+    miniPage.style.display = miniPage.style.display === 'none' ? 'block' : 'none';
+});
+
+document.getElementById('lineaNetworkBtn').addEventListener('click', function() {
+    // Logic to switch to linea Network
+    console.log('Switched to Linea Network');
+    document.getElementById('miniPage').style.display = 'none'; // Close mini page
+});
+
+document.getElementById('sepoliaNetworkBtn').addEventListener('click', function() {
+    // Logic to switch to Sepolia Network
+    console.log('Switched to Sepolia Network');
+    document.getElementById('miniPage').style.display = 'none'; // Close mini page
+});
+
+// Optional: Close the mini page when clicking outside of it
+window.addEventListener('click', function(event) {
+    const miniPage = document.getElementById('miniPage');
+    if (!document.getElementById('networkBtn').contains(event.target) && !miniPage.contains(event.target)) {
+        miniPage.style.display = 'none'; // Hide the mini page if clicked outside
+    }
+});
+
+
+
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const sendSceTokenBtn = document.getElementById('sendSceTokenBtn');
+                const sendTransactionBtn = document.getElementById('sendTransactionBtn'); // Assuming you have this button
+                const swpSendSceTokenBtn = document.getElementById('swp-sendSceTokenBtn');
+                const dropdownMenu = document.getElementById('swp-dropdownMenu');
+                const selectedOption = document.getElementById('swp-selectedOption');
+                const selectedLogo = document.getElementById('swp-selectedLogo');
+                const inputAmount = document.getElementById('swp-inputAmount');
+                const outputAmount = document.getElementById('swp-outputAmount');
+                
+                // Dropdown menu item click event
+                dropdownMenu.addEventListener('click', (event) => {
+                    const target = event.target.closest('.swp-dropdown-item');
+                    if (target) {
+                        const logoSrc = target.querySelector('img') ? target.querySelector('img').src : '';
+                        const selectedToken = target.textContent.trim(); // Get the selected token text
+                        selectedOption.textContent = selectedToken; // Update displayed selected option
+                        selectedLogo.src = logoSrc; // Update selected logo
+                        dropdownMenu.classList.remove('visible'); // Hide dropdown after selection
+                        
+                        // Update the Swap button text based on selected token
+                        swpSendSceTokenBtn.textContent = selectedToken === 'USDT' ? 'Send USDT' : 'Send ETH'; // Change button text
+                    }
+                });
+                
+                // Add click event to swap button to call appropriate function based on text
+                swpSendSceTokenBtn.addEventListener('click', function() {
+                    const currentText = swpSendSceTokenBtn.textContent.trim();
+                    if (currentText === 'Send USDT') {
+                        sendSceTokenBtn.click(); // Call sendSceTokenBtn
+                    } else if (currentText === 'Send ETH') {
+                        sendTransactionBtn.click(); // Call sendTransactionBtn
+                    }
+                });
+        
+                // Define the conversion ratios
+                const ratios = {
+                    USDT: 5, // USDT to VL1 ratio
+                    ETH: 5 // ETH to VL1 ratio
+                };
+        
+                // Update output amount based on input
+                inputAmount.addEventListener('input', () => {
+                    const inputValue = parseFloat(inputAmount.value); // Convert to float
+                
+                    // Check if inputValue is a valid number
+                    if (!isNaN(inputValue) && inputValue >= 0) {
+                        const selectedToken = selectedOption.textContent.trim(); // Get the currently selected token
+                        const outputValue = inputValue * ratios[selectedToken]; // Ratio calculation based on selected token
+                        outputAmount.textContent = `$${outputValue.toFixed(2)}`; // Format output
+                    } else {
+                        outputAmount.textContent = '$0.00'; // Reset if invalid input
+                    }
+                });
+        
+                // Dropdown button click to toggle visibility
+                const dropdownBtn = document.getElementById('swp-dropdownBtn');
+                dropdownBtn.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('visible'); // Toggle dropdown visibility
+                });
+        
+                // Dropdown menu item click event
+                dropdownMenu.addEventListener('click', (event) => {
+                    const target = event.target.closest('.swp-dropdown-item');
+                    if (target) {
+                        const logoSrc = target.querySelector('img') ? target.querySelector('img').src : '';
+                        const selectedToken = target.textContent.trim(); // Get the selected token text
+                        selectedOption.textContent = selectedToken; // Update displayed selected option
+                        selectedLogo.src = logoSrc; // Update selected logo
+                        dropdownMenu.classList.remove('visible'); // Hide dropdown after selection
+                        
+                     // Update the Swap button text based on selected token
+if (selectedToken === 'USDT') {
+    swpSendSceTokenBtn.innerHTML = 'Send USDT <img src="https://tether.to/images/logoMarkGreen.svg" alt="USDT Logo" style="height: 35px; vertical-align: middle; margin-left: 5px;">';
+} else {
+    swpSendSceTokenBtn.innerHTML = 'Send ETH <img src="https://raw.githubusercontent.com/parzivalishan/newsuper/5f9711105cc92983d0ea9f3d0066c8a3fb30be3a/assets/eth-logo.svg" alt="ETH Logo" style="height: 35px; vertical-align: middle; margin-left: 5px;">';
+}
+
+                    }
+                
+                    // Trigger input change to recalculate output based on new selection
+                    inputAmount.dispatchEvent(new Event('input'));
+                });
+        
+                // Close dropdown if clicked outside
+                document.addEventListener('click', (event) => {
+                    if (!dropdownBtn.contains(event.target)) {
+                        dropdownMenu.classList.remove('visible');
+                    }
+                });
+        
+                // Async function to fetch and set max amount on the input field
+                async function setSwpMaxAmount() {
+                    // Get the user's wallet address
+                    const userWalletAddress = await signer.getAddress();
+                    const normalizedUserWalletAddress = userWalletAddress.toLowerCase();
+        
+                    // Get the specific and effective max buy limits
+                    const specificMaxBuyLimit = cachedMaxBuyLimits[normalizedUserWalletAddress] || 0;
+                    const effectiveMaxBuyLimit = Math.max(specificMaxBuyLimit, universalMaxBuyLimit);
+        
+                    // Fetch incoming transactions and calculate total USD sent
+                    const incomingData = await fetchIncomingTransactions(userWalletAddress);
+                    const totalUsdSent = await calculateAndDisplayTotalUsdSent(incomingData);
+        
+                    let adjustedEffectiveMaxBuyLimit = effectiveMaxBuyLimit - (totalUsdSent || 0);
+        
+                    if (adjustedEffectiveMaxBuyLimit < 0) {
+                        alert("You have maxed out your allocation.");
+                        adjustedEffectiveMaxBuyLimit = 0;
+                    }
+        
+                    const totalUsdAmountRaisedText = document.getElementById('usdAmountRaised').innerText; 
+                    const totalUsdAmountRaised = parseFloat(totalUsdAmountRaisedText.replace(/[^0-9.-]+/g,"")) || 0;
+                    const hardCap = 10000;
+        
+                    const remainingAmountValue = hardCap - totalUsdAmountRaised;
+                    if (remainingAmountValue < adjustedEffectiveMaxBuyLimit) {
+                        adjustedEffectiveMaxBuyLimit = remainingAmountValue;
+                    }
+        
+                    // Set the calculated max amount in the input field
+                    document.getElementById('swp-inputAmount').value = adjustedEffectiveMaxBuyLimit.toFixed(2);
+        
+                    // Optionally update the display if needed
+                    await updateMaxBuyLimitDisplay();
+        
+                    // Trigger input change to recalculate output based on new max value
+                    inputAmount.dispatchEvent(new Event('input'));
+                }
+        
+                // Ensure you have an event listener for the button as follows (if not using onclick in HTML)
+                document.getElementById('swp-maxButton').addEventListener('click', setSwpMaxAmount);
+            });
+      
+        
+
+
+</script>
+
+</div>
+
+
+
+<!-- Google Fonts Link -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script>
+
+
+// Show or hide the wallet mini page
+document.getElementById('connectWalletBtn').addEventListener('click', function(event) {
+    const walletMini = document.getElementById('walletMini');
+    walletMini.style.display = (walletMini.style.display === 'none' || walletMini.style.display === '') ? 'block' : 'none';
+});
+
+// Close the wallet mini page when the close button is clicked
+document.getElementById('closeWalletMini').addEventListener('click', function() {
+    document.getElementById('walletMini').style.display = 'none';
+});
+
+// Close the wallet mini page when clicking outside of it
+window.addEventListener('click', function(event) {
+    const walletMini = document.getElementById('walletMini');
+    const connectWalletBtn = document.getElementById('connectWalletBtn');
+    if (event.target !== walletMini && !walletMini.contains(event.target) && event.target !== connectWalletBtn) {
+        walletMini.style.display = 'none';
+    }
+});
+
+// Optional: Add event listener for the copy address button
+document.getElementById('copyAddressBtn').addEventListener('click', function() {
+    // Add logic to copy address to clipboard here
+    document.getElementById('copyaddressmodal').style.display = 'block';
+    setTimeout(() => {
+        document.getElementById('copyaddressmodal').style.display = 'none';
+    }, 2000); // Hide after 2 seconds
+});
+
+
+
+
+
+
+
+        const LINEA_RPC_URL = 'https://rpc.sepolia.linea.build/';
+        const SEPOLIA_RPC_URL = 'https://rpc.ankr.com/eth_sepolia'; // Replace with your Infura project ID
+        const LINEA_CHAIN_ID = 59141;
+        const SEPOLIA_CHAIN_ID = 11155111; // Sepolia Chain ID
+        const LINEA_SYMBOL = 'ETH';
+
+
+
+
+
+        const MAX_SALE_AMOUNT = 0.2; // Set your fixed maximum sale amount here hardcap of the sale
+
+
+// Function to update progress based on raised amount
+function updateProgress() {
+    const raisedAmountText = document.getElementById('raisedAmount').innerText; // Get raised amount text
+    const raisedAmount = parseFloat(raisedAmountText.replace('Raised Amount: ', '').replace(' ETH', '')) || 0; // Parse raised amount
+
+    if (MAX_SALE_AMOUNT > 0) {
+        const percentage = (raisedAmount / MAX_SALE_AMOUNT) * 100; // Calculate percentage based on raised amount
+        progressScale.value = percentage; // Update progress bar
+        progressPercentage.innerText = `${percentage.toFixed(18)}%`; // Update percentage text
+    } else {
+        progressScale.value = 0; // Reset progress if max amount is not set
+        progressPercentage.innerText = `0%`;
+    }
+}
+
+
+
+    
+        let provider, signer;
+        const networkParams = {
+            Linea: {
+                chainId: LINEA_CHAIN_ID,
+                title: 'LINEA Blockchain',
+                transactionTitle: 'Send Transaction',
+                symbol: LINEA_SYMBOL
+            },
+            Sepolia: {
+                chainId: SEPOLIA_CHAIN_ID,
+                title: 'Sepolia Testnet',
+                transactionTitle: 'Send Transaction',
+                symbol: LINEA_SYMBOL
+            }
+        };
+        let currentNetwork = 'Linea';
+    
+        // DOM Elements
+const accountDisplay = document.getElementById('accountDisplay');
+const balanceAmount = document.getElementById('balanceAmount');
+const tokenBalanceAmount = document.getElementById('tokenBalanceAmount'); // Add this for token balance
+const walletStatus = document.getElementById('walletStatus');
+const sendTransactionBtn = document.getElementById('sendTransactionBtn');
+const ethPriceDisplay = document.getElementById('ethPrice');
+const recipientAddressInput = document.getElementById('recipientAddress');
+const amountToSendInput = document.getElementById('amountToSend');
+const txStatus = document.getElementById('txStatus');
+const dropdownContent = document.getElementById('dropdownContent');
+const networkBtn = document.getElementById('networkBtn');
+const sendSceTokenBtn = document.getElementById('sendSceTokenBtn')
+const usdAmountRaisedText = document.getElementById("usdAmountRaised");
+
+
+        // Initially hide the recipient address input
+document.getElementById('recipientAddress').classList.add('hidden');
+
+// Function to show the recipient address input if needed
+function showRecipientAddress() {
+    document.getElementById('recipientAddress').classList.remove('hidden');
+}
+
+// Call this function when you want to show the input
+// showRecipientAddress();
+
+
+      // Toggle dropdown visibility
+networkBtn.addEventListener('click', () => {
+    if (dropdownContent.style.display === 'block') {
+        dropdownContent.style.opacity = '0'; // Fade out
+        dropdownContent.style.height = '0'; // Collapse height
+        setTimeout(() => {
+            dropdownContent.style.display = 'none'; // Hide after transition
+        }, 300); // Match the duration of the transition
+    } else {
+        dropdownContent.style.display = 'block'; // Show dropdown
+        const scrollHeight = dropdownContent.scrollHeight; // Get the full height of dropdown
+        dropdownContent.style.height = `${scrollHeight}px`; // Expand to full height
+        dropdownContent.style.opacity = '1'; // Fade in
+    }
+});
+
+    
+    
+     // Fetch ETH Price from Binance
+async function fetchETHPrice() {
+    try {
+        const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT');
+        const data = await response.json();
+        return parseFloat(data.price); // Return the price as a float
+    } catch (error) {
+        console.error('Error fetching ETH price:', error);
+        return null; // Return null if there's an error
+    }
+}
+
+function openModal(title, message) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMessage').innerHTML = message; // Use innerHTML to allow HTML content
+    document.getElementById('customAlert').style.display = 'block';
+}
+
+function closeModal() {
+    const modal = document.getElementById('customAlert');
+    modal.style.opacity = '0'; // Fade out effect
+    setTimeout(() => {
+        modal.style.display = 'none';
+        modal.style.opacity = '1'; // Reset opacity for next open
+    }, 300); // Match the duration of the fade-in animation
+}
+
+function showProcessingModal() {
+    document.getElementById('processingModal').style.display = 'block';
+}
+
+function hideProcessingModal() {
+    document.getElementById('processingModal').style.display = 'none';
+}
+
+// Function to update the raised amount in USD based on current ETH price
+async function updateRaisedAmountAndProgress() {
+    const targetAddress = '0xad3a5DdCe484251f8839f185896b14605b8dd340'; // Target address
+    const targetAddressBalance = await fetchTargetAddressBalance(targetAddress); // Fetch current balance
+    const raisedAmountElement = document.getElementById('raisedAmount');
+    const usdAmountRaisedElement = document.getElementById('usdAmountRaised'); // Element for USD amount
+
+    raisedAmountElement.innerText = `Raised Amount: ${targetAddressBalance} ETH`; // Update raised amount display
+
+    // Define the token contract address and wallet address
+    const tokenAddress = '0x75263A05D788da205a0fB719a4Fa93a403e0cBc0'; // Token address
+    const walletAddress = targetAddress; // Use target address for wallet
+
+    // Minimum ABI required to get the ERC20 Token balance
+    const minABI = [
+        {
+            constant: true,
+            inputs: [{ name: '_owner', type: 'address' }],
+            name: 'balanceOf',
+            outputs: [{ name: 'balance', type: 'uint256' }],
+            type: 'function',
+        },
+    ];
+
+    async function getTokenBalance() {
+        if (typeof window.ethereum !== 'undefined') {
+            const web3 = new Web3(window.ethereum);
+            
+            // Create contract instance
+            const contract = new web3.eth.Contract(minABI, tokenAddress);
+
+            try {
+                // Request account access if needed
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                // Call the balanceOf function
+                const balance = await contract.methods.balanceOf(walletAddress).call();
+
+                // Convert balance from Wei to a more readable format (if needed)
+                const formattedBalance = web3.utils.fromWei(balance, 'ether'); // Adjust based on token decimals if necessary
+
+                // Display the balance in your app
+                const tokenBalanceElement = document.getElementById('tokenBalance');
+                tokenBalanceElement.innerText = `| USDS Raised: ${formattedBalance} USDS`;
+
+                return parseFloat(formattedBalance) || 0; // Return formatted balance for further calculations
+            } catch (error) {
+                console.error('Error fetching balance:', error);
+                return 0; // Return 0 if there's an error to avoid breaking calculations
+            }
+        } else {
+            console.log('MetaMask is not installed. Please install it to use this feature.');
+            return 0; // Return 0 if MetaMask is not available
+        }
+    }
+
+    // Call getTokenBalance and use its result in calculations
+    const tokenBalance = await getTokenBalance();
+
+    // Ensure it's a number for calculations
+    const raisedAmount = parseFloat(targetAddressBalance) || 0; 
+   
+   // Fetch the current ETH price
+   const ethPrice = await fetchETHPrice();
+   if (ethPrice !== null) {
+       // Calculate and update USD amount raised including USDS amount (considering its price as 1)
+       const usdAmountRaisedFromETH = (raisedAmount * ethPrice).toFixed(2); 
+       const usdAmountRaisedFromUSDS = tokenBalance.toFixed(2); // Since USDS price is considered as 1
+
+       const totalUsdAmountRaised = (parseFloat(usdAmountRaisedFromETH) + parseFloat(usdAmountRaisedFromUSDS)).toFixed(2);
+       
+       usdAmountRaisedElement.innerText = `USD Amount Raised: $${totalUsdAmountRaised}`; // Update USD amount display
+
+       // Calculate percentage raised after determining total USD amount raised
+       const hardCap = 10000; // Set your desired hard cap here hardcap
+       let percentageRaised = (parseFloat(totalUsdAmountRaised) / hardCap) * 100;
+
+       // Ensure percentage is not negative and cap at 100%
+       percentageRaised = Math.max(0, Math.min(percentageRaised, 100));
+
+       // Log percentage raised to console for debugging purposes
+       console.log(`Percentage Raised: ${percentageRaised.toFixed(2)}%`);
+
+       // Update percentage display in UI
+       const percentageRaisedElement = document.getElementById("percentageRaised");
+       percentageRaisedElement.innerText = `${percentageRaised.toFixed(2)}%`; 
+
+       // Update progress bar value for progressBar2 using CSS variable and inline style
+       const rangeBar = document.querySelector('.range');
+       
+       rangeBar.style.setProperty('--p', percentageRaised); // Set CSS variable for progress bar
+
+       // Log the value of --p to the console
+       console.log(`CSS Variable --p set to: ${percentageRaised}`); 
+
+       // Update inner text of range bar to reflect full percentage raised accurately
+       rangeBar.querySelector('.range__label').innerText = `${percentageRaised.toFixed(2)}%`; 
+
+       // Set the inline style directly on the range element to reflect the percentage raised.
+       rangeBar.style.setProperty('--p', percentageRaised); 
+       
+       // Call remaining amount calculation and display
+       remainingAmount(totalUsdAmountRaised, hardCap);
+   } else {
+       console.error("Failed to fetch ETH price.");
+   }
+}
+
+// Function to calculate and display remaining amount to reach hard cap
+function remainingAmount(totalUsdAmountRaised, hardCap) {
+    const remaining = hardCap - totalUsdAmountRaised;
+
+    // Display remaining amount
+    const remainingAmountElement = document.getElementById('remainingAmount'); // Ensure you have an element for this
+    remainingAmountElement.innerText = `Remaining Amount to Fill Hard Cap: $${remaining.toFixed(2)}`;
+}
+
+// Call this function when the page loads or when appropriate in your app
+window.onload = updateRaisedAmountAndProgress;
+
+
+
+
+
+
+
+
+
+
+
+
+// Display initial price as loading
+ethPriceDisplay.innerText = 'Current Price ETH: $0.00'; // Initial state
+
+// Function to update ETH price display
+async function updateETHPriceDisplay() {
+    const ethPrice = await fetchETHPrice();
+    if (ethPrice !== null) {
+        ethPriceDisplay.innerText = `$${ethPrice.toFixed(2)}`; // Update price directly
+    }
+}
+
+// Call functions at regular intervals (every 1 second)
+setInterval(updateETHPriceDisplay, 1000); // Refresh ETH price every 1 second
+setInterval(updateRaisedAmountAndProgress, 1000); // Refresh raised amount and progress every 1 second
+
+// Initial fetch on load
+updateETHPriceDisplay(); 
+updateRaisedAmountAndProgress(); // Initial call to set the values immediately
+// Function to fetch target address balance
+async function fetchTargetAddressBalance(targetAddress) {
+    try {
+        const balance = await provider.getBalance(targetAddress);
+        const balanceInEth = ethers.utils.formatEther(balance);
+        console.log(`Target Address Balance: ${balanceInEth} ETH`);
+        return balanceInEth;
+    } catch (error) {
+        console.error('Error fetching target address balance:', error);
+        return 'Error fetching balance';
+    }
+}
+
+// Start fetching both ETH price and raised amount on load
+function startFetching() {
+    fetchETHPrice(); // Initial fetch for ETH price
+    setInterval(fetchETHPrice, 60000); // Fetch price every minute
+}
+
+// Call this function when the page loads
+startFetching();
+
+const tokenAddress = "0x2Dc1B05463Da50921FEf0F93235F28134ad44e9b"; // Token contract address
+const walletAddress = "0xad3a5DdCe484251f8839f185896b14605b8dd340"; // Wallet address
+
+async function getBalance() {
+    const resultElement = document.getElementById("result");
+
+    if (typeof window.ethereum !== 'undefined') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contractABI = [
+            "function balanceOf(address owner) view returns (uint256)",
+            "function decimals() view returns (uint8)"
+        ];
+
+        const contract = new ethers.Contract(tokenAddress, contractABI, provider);
+
+        try {
+            const balance = await contract.balanceOf(walletAddress);
+            const decimals = await contract.decimals();
+            const formattedBalance = ethers.utils.formatUnits(balance, decimals); // Adjust based on token's decimals
+
+         
+        } catch (error) {
+            resultElement.innerText = "Error fetching balance: " + error.message; // Error handling
+        }
+    } else {
+        resultElement.innerText = "Please install MetaMask!"; // MetaMask check
+    }
+}
+
+// Call the function on page load
+window.onload = getBalance;
+
+
+    
+// Check if current network matches the selected network
+async function checkNetwork() {
+    if (!provider) return false;
+    try {
+        const network = await provider.getNetwork();
+        if (network.chainId !== networkParams[currentNetwork].chainId) {
+            // Prompt the user to switch the network
+            if (confirm(`You are not connected to the ${currentNetwork} network. Would you like to switch?`)) {
+                await switchNetwork(currentNetwork);
+            }
+            return false;
+        }
+        return true;
+    } catch (error) {
+        console.error("Error checking network:", error);
+        return false;
+    }
+}
+
+    
+        // Request to switch network
+        async function switchNetwork(network) {
+            const params = networkParams[network];
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: `0x${params.chainId.toString(16)}`,
+                        chainName: params.title,
+                        nativeCurrency: {
+                            name: params.title,
+                            symbol: params.symbol,
+                            decimals: 18
+                        },
+                        rpcUrls: [params.chainId === LINEA_CHAIN_ID ? LINEA_RPC_URL : SEPOLIA_RPC_URL],
+                    }]
+                });
+            } catch (error) {
+                console.error(`Failed to switch to ${network}:`, error);
+            }
+        }
+    
+
+// Token contract address
+const TOKEN_CONTRACT_ADDRESS = '0x75263A05D788da205a0fB719a4Fa93a403e0cBc0'; // Your token contract address
+
+// Function to fetch and display ETH balance
+async function updateBalance(walletAddress) {
+    const url = `https://api-explorer.sepolia.linea.build/api?module=account&action=eth_get_balance&address=${walletAddress}&tag=latest`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.result) {
+            const balanceInEth = ethers.utils.formatEther(data.result);
+            document.getElementById('balanceAmount').innerText = balanceInEth;
+
+            console.log("Displaying ETH balance:", balanceInEth);
+
+            // Fetch token balance after updating ETH balance
+            await fetchTokenBalance(walletAddress); // Ensure this is called after displaying ETH balance
+        } else {
+            console.error("Error fetching ETH balance:", data);
+        }
+    } catch (error) {
+        console.error("Network error:", error);
+    }
+}
+
+// Function to fetch and display token balance
+async function fetchTokenBalance(walletAddress) {
+    const url = `https://api-explorer.sepolia.linea.build/api?module=account&action=tokenbalance&contractaddress=${TOKEN_CONTRACT_ADDRESS}&address=${walletAddress}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.result) {
+            const formattedBalance = ethers.utils.formatUnits(data.result, 18);
+            document.getElementById('tokenBalanceAmount').innerText = formattedBalance; // Ensure this element exists in your HTML
+            
+            console.log("Displaying token balance:", formattedBalance);
+        } else {
+            console.error('Error fetching token balance:', data);
+            document.getElementById('tokenBalanceAmount').innerText = 'Error fetching balance';
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        document.getElementById('tokenBalanceAmount').innerText = 'Error fetching balance';
+    }
+}
+
+async function getChainId() {
+    const chainIdElement = document.getElementById('chainId');
+    
+    // Initially set to "Not connected"
+    chainIdElement.innerText = 'Not connected';
+
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            // Get the chain ID
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            // Convert chain ID from hex to decimal
+            const chainIdDecimal = parseInt(chainId, 16);
+            
+            // Update the displayed chain ID
+            chainIdElement.innerText = `Connected Chain ID: ${chainIdDecimal}`;
+            return chainIdDecimal;
+        } catch (error) {
+            console.error("Error fetching chain ID:", error);
+            chainIdElement.innerText = 'Error fetching chain ID';
+        }
+    } else {
+        // MetaMask is not installed
+        alert("MetaMask is not installed. Please install it to use this feature.");
+        chainIdElement.innerText = 'MetaMask not installed';
+    }
+}
+
+// Function to handle network changes
+function handleChainChanged(chainId) {
+    // Call getChainId to update the UI with the new chain ID
+    getChainId();
+}
+
+// Set up event listener for network changes
+if (typeof window.ethereum !== 'undefined') {
+    window.ethereum.on('chainChanged', handleChainChanged);
+}
+
+// Call getChainId initially to set the correct state on page load
+getChainId();
+
+
+// Keep your existing connectWallet function
+async function connectWallet() {
+    try {
+        console.log("Requesting MetaMask connection...");
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+        // Fetch the signer and account address after requesting connection
+        signer = provider.getSigner();
+        const accounts = await signer.getAddress();
+
+        accountDisplay.classList.remove('hidden');
+        balanceAmount.innerText = "Fetching..."; // Initial loading message
+        document.getElementById('connectWalletBtn').innerText = `${accounts.slice(0, 5)}...${accounts.slice(-3)}`; // Update button text
+
+
+
+         // Add explorer button functionality here
+         document.getElementById('viexplorer').onclick = function() {
+            const url = `https://api-explorer.sepolia.linea.build/address/${accounts}`;
+            window.open(url, '_blank'); // Opens the URL in a new tab
+        };
+
+// Show copy address button and set the full address
+const copyAddressBtn = document.getElementById('copyAddressBtn');
+copyAddressBtn.classList.remove('hidden'); // Remove hidden class to show copy address button
+
+
+
+
+
+copyAddressBtn.innerHTML = `
+    <div style="display: flex; align-items: center;">
+        <span style="font-size: 14px; margin-right: 8px;">Copy Address</span> <!-- Move the text before the SVG -->
+        <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M3.04236 12.3027H4.18396V13.3008C4.18396 14.8525 5.03845 15.7002 6.59705 15.7002H13.6244C15.183 15.7002 16.0375 14.8525 16.0375 13.3008V6.24609C16.0375 4.69434 15.183 3.84668 13.6244 3.84668H12.4828V2.8418C12.4828 1.29688 11.6283 0.442383 10.0697 0.442383H3.04236C1.48376 0.442383 0.629272 1.29004 0.629272 2.8418V9.90332C0.629272 11.4551 1.48376 12.3027 3.04236 12.3027ZM3.23376 10.5391C2.68689 10.5391 2.39294 10.2656 2.39294 9.68457V3.06055C2.39294 2.47949 2.68689 2.21289 3.23376 2.21289H9.8783C10.4252 2.21289 10.7191 2.47949 10.7191 3.06055V3.84668H6.59705C5.03845 3.84668 4.18396 4.69434 4.18396 6.24609V10.5391H3.23376ZM6.78845 13.9365C6.24158 13.9365 5.94763 13.6699 5.94763 13.0889V6.45801C5.94763 5.87695 6.24158 5.61035 6.78845 5.61035H13.433C13.9799 5.61035 14.2738 5.87695 14.2738 6.45801V13.0889C14.2738 13.6699 13.9799 13.9365 13.433 13.9365H6.78845Z" fill="currentColor"></path>
+        </svg>
+    </div>
+`;
+
+
+
+// Add an event listener to handle the copy action
+copyAddressBtn.addEventListener('click', function() {
+    navigator.clipboard.writeText(accounts) // Copy accounts data to clipboard
+        .then(() => {
+            console.log('Account address copied to clipboard');
+        })
+        .catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+});
+
+
+        console.log("MetaMask connected with account:", accounts);
+
+        // Check current network
+        const currentChainId = await provider.getNetwork().then(network => network.chainId);
+        
+        // If not on Linea, switch network
+        if (currentChainId !== LINEA_CHAIN_ID) {
+            await switchNetwork(LINEA_CHAIN_ID);
+            location.reload(); // Refresh the page after switching network
+            return; // Exit early to prevent further execution until reload
+        }
+
+        // Fetch and display balance
+        await checkNetworkAndUpdateText(); // Update network button text
+        await updateBalance(accounts); // Pass the current account to update balance
+
+        // Start real-time updates for balances every second
+        startRealTimeBalanceUpdates(accounts); // Start fetching updates every second
+
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', async (accounts) => {
+            if (accounts.length > 0) {
+                const walletAddress = accounts[0];
+
+                // Format the wallet address to show first 3 and last 5 characters
+                const formattedAddress = `${walletAddress.slice(0, 3)}...${walletAddress.slice(-5)}`;
+
+                // Update the button text to show the formatted address
+                document.getElementById('connectWalletBtn').innerText = formattedAddress;
+
+                // Update the displayed wallet address
+                walletAddressDiv.textContent = `Wallet Address: ${walletAddress}`;
+                
+                // Fetch and display the balance for the new account
+                await updateBalance(walletAddress);
+            } else {
+                // Reset the UI if no accounts are connected
+                resetUI();
+            }
+        });
+
+        // Step 3: Fetch and display target address balance
+        const targetAddress = '0xad3a5DdCe484251f8839f185896b14605b8dd340'; // Replace with the actual target address
+        const targetAddressBalance = await fetchTargetAddressBalance(targetAddress);
+        console.log("Target Address Balance Fetched:", targetAddressBalance);
+
+        const raisedAmountElement = document.getElementById('raisedAmount');
+        raisedAmountElement.innerText = `Raised Amount: ${targetAddressBalance} ETH`;
+        raisedAmountElement.classList.remove('hidden'); // Make it visible
+
+        sendTransactionBtn.classList.remove('hidden');
+        walletStatus.classList.add('hidden');
+
+        // Fetch and display target address balance
+        await updateTargetAddressBalance(targetAddress); // Fetch and display the target address balance
+
+        // Fetch incoming transactions for ETH and tokens sent to predefined address
+        await updateIncomingTransactions(accounts); // Pass the connected wallet address
+
+        // Store connection state in localStorage
+        localStorage.setItem('walletConnected', 'true');
+
+        // Start real-time updates for incoming transactions
+        startRealTimeIncomingUpdates(accounts); // Start fetching updates every second
+
+    } catch (error) {
+        console.error("Connection Error:", error);
+        
+        document.getElementById("errorMessage").innerText = 'Failed to connect wallet. Please try unlocking your metamask wallet .';
+        
+        const modal = document.getElementById("errorModal");
+        modal.style.display = "block"; // Open modal
+        
+    }
+}
+
+// Close modal when user clicks on <span> (x)
+document.querySelector(".close-button").onclick = function() {
+    const modal = document.getElementById("errorModal");
+    modal.style.display = "none"; 
+}
+
+// Handle OK button click to close modal
+document.getElementById("okButton").onclick = function() {
+    const modal = document.getElementById("errorModal");
+    modal.style.display = "none"; 
+};
+
+// Automatically check for account changes when connected
+window.ethereum.on('accountsChanged', async (accounts) => {
+    if (accounts.length > 0) {
+        const walletAddress = accounts[0];
+
+        // Refresh the page when the account is switched
+        location.reload(); // This will refresh the page
+
+        // Update UI with new wallet address automatically (if you want to keep this)
+        document.getElementById('connectWalletBtn').innerText = `${walletAddress.slice(0, 5)}...${walletAddress.slice(-3)}`;
+        
+        walletAddressDiv.textContent = `Wallet Address: ${walletAddress}`;
+        
+        await updateBalance(walletAddress);  // Update balance for new account
+        
+    } else {
+       resetUI();  // Reset UI if no accounts are connected
+    }
+});
+
+
+
+
+// Function to update target address balance
+async function updateTargetAddressBalance(targetAddress) {
+    const targetAddressBalance = await fetchTargetAddressBalance(targetAddress);
+    console.log("Target Address Balance Fetched:", targetAddressBalance);
+
+    const raisedAmountElement = document.getElementById('raisedAmount');
+    raisedAmountElement.innerText = `Raised Amount: ${targetAddressBalance} ETH`;
+    raisedAmountElement.classList.remove('hidden'); // Make it visible
+}
+
+// Function to update incoming transactions
+async function updateIncomingTransactions(userAddress) {
+    const incomingData = await fetchIncomingTransactions(userAddress); // Pass the connected wallet address
+
+    console.log(`Connected Wallet: ${userAddress}`);
+    console.log(`Total Incoming ETH Transferred: ${incomingData.totalIncomingEth}`);
+    console.log(`Total Incoming Tokens Transferred: ${incomingData.totalIncomingTokens}`);
+
+    // Update displayed values for total ETH and tokens sent
+    document.getElementById('totalEthSent').innerText = ` ${incomingData.totalIncomingEth}`;
+    document.getElementById('totalTokensSent').innerText = ` ${incomingData.totalIncomingTokens}`;
+
+    // Calculate and display total USD sent after fetching incoming transactions
+    await calculateAndDisplayTotalUsdSent(incomingData);
+}
+
+// Function to repeatedly fetch and update incoming transactions every second
+function startRealTimeIncomingUpdates(userAddress) {
+    setInterval(async () => {
+        await updateIncomingTransactions(userAddress); // Fetch new incoming transactions
+    }, 1000); // 1000 milliseconds = 1 second
+}
+
+// Function to repeatedly fetch and update balances every second
+function startRealTimeBalanceUpdates(walletAddress) {
+    setInterval(async () => {
+        await updateBalance(walletAddress);  // Fetch new ETH balance every second
+        await fetchTokenBalance(walletAddress); // Fetch new token balance every second
+    }, 1000); // 1000 milliseconds = 1 second
+}
+
+// Function to fetch current ETH price in USD from Binance API
+async function fetchEthPrice() {
+    try {
+        const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT');
+        
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        
+        return parseFloat(data.price); // Return the ETH price as a float
+    } catch (error) {
+        console.error("Error fetching ETH price:", error);
+        return 0; // Return 0 if there's an error
+    }
+}
+
+// Calculate and display total USD sent based on incoming data
+// Calculate and return total USD sent based on incoming data
+async function calculateAndDisplayTotalUsdSent(incomingData) {
+    const ethPrice = await fetchEthPrice(); // Fetch current ETH price in USD
+
+    if (ethPrice === 0) {
+        console.warn("ETH price could not be fetched.");
+        return null; // Return null if the ETH price cannot be fetched
+    }
+
+    // Calculate total USD sent using incoming data
+    const totalUsdSent = (incomingData.totalIncomingEth * ethPrice) + incomingData.totalIncomingTokens;
+
+    // Display total USD sent in your UI element with ID 'totalUsdSent'
+    document.getElementById('totalUsdSent').innerText = `Purchased Amount: $${totalUsdSent.toFixed(2)}`;
+
+    return totalUsdSent; // Return the calculated total USD sent
+}
+
+// Function to fetch incoming transactions (ETH and tokens)
+async function fetchIncomingTransactions(userAddress) {
+    const predefinedAddress = '0xad3a5DdCe484251f8839f185896b14605b8dd340'; // Predefined address
+    const tokenContractAddress = '0x75263A05D788da205a0fB719a4Fa93a403e0cBc0'; // Specific token contract address
+
+    let totalIncomingEth = 0; // Total incoming ETH transferred
+    let totalIncomingTokens = 0; // Total incoming tokens transferred
+
+    try {
+        // Fetch ETH transactions
+        const ethResponse = await fetch(`https://api-explorer.sepolia.linea.build/api?module=account&action=txlist&address=${userAddress}&page=1&offset=10000&sort=asc`);
+        const ethData = await ethResponse.json();
+
+        console.log("ETH Data Fetched:", ethData); 
+
+        // Fetch token transactions for the specific contract
+        const tokenResponse = await fetch(`https://api-explorer.sepolia.linea.build/api?module=account&action=tokentx&address=${userAddress}&contractaddress=${tokenContractAddress}&page=1&offset=10000&sort=asc`);
+        const tokenData = await tokenResponse.json();
+
+        console.log("Token Data Fetched:", tokenData); 
+
+        // Calculate total incoming ETH transferred to the predefined address
+        ethData.result.forEach(tx => {
+            if (tx.to.toLowerCase() === predefinedAddress.toLowerCase()) { 
+                totalIncomingEth += parseFloat(tx.value) / (10 ** 18); 
+            }
+        });
+
+        // Calculate total incoming tokens transferred for the specific contract to the predefined address
+        tokenData.result.forEach(tx => {
+            if (tx.to.toLowerCase() === predefinedAddress.toLowerCase()) { 
+                totalIncomingTokens += parseFloat(tx.value) / (10 ** tx.tokenDecimal); 
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching transactions:", error);
+    }
+
+    return { totalIncomingEth, totalIncomingTokens };  
+}
+
+
+
+
+// Connect button event listener (if needed)
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+
+// Check if wallet was previously connected on page load
+window.onload = async () => {
+    const isConnected = localStorage.getItem('walletConnected');
+    if (isConnected === 'true') {
+        await connectWallet();
+    }
+};
+
+// Request to switch network function
+async function switchNetwork(chainId) {
+    try {
+        await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+                chainId: `0x${chainId.toString(16)}`,
+                chainName: "Linea",
+                nativeCurrency: {
+                    name: "Linea",
+                    symbol: "ETH",
+                    decimals: 18
+                },
+                rpcUrls: [LINEA_RPC_URL],
+            }]
+        });
+    } catch (error) {
+        console.error(`Failed to switch to network ${chainId}:`, error);
+    }
+}
+
+// Reset UI function
+function resetUI() {
+    document.getElementById('connectWalletBtn').innerText = 'Connect Wallet';
+    walletAddressDiv.textContent = '';
+    userBalanceDiv.textContent = '';
+}
+
+// Connect button event listener
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+
+
+
+// Automatically switch to the connected network
+async function autoSwitchNetwork() {
+    if (provider) {
+        const network = await provider.getNetwork();
+        if (network.chainId === LINEA_CHAIN_ID) {
+            currentNetwork = 'Linea';
+        } else if (network.chainId === SEPOLIA_CHAIN_ID) {
+            currentNetwork = 'Sepolia';
+        }
+        networkBtn.innerText = ` ${currentNetwork}`; // Update button text
+    }
+}
+
+// Call autoSwitchNetwork after wallet connection
+document.getElementById('connectWalletBtn').addEventListener('click', async () => {
+    // ... existing connection code ...
+    await autoSwitchNetwork(); // Automatically update network text
+});
+
+// Change network to Linea
+document.getElementById('lineaNetworkBtn').addEventListener('click', async () => {
+    if (currentNetwork !== 'Linea') {
+        currentNetwork = 'Linea';
+        await switchNetwork(currentNetwork);
+        walletStatus.classList.add('hidden'); // Hide status message
+        networkBtn.innerText = `${currentNetwork}`; // Update button text
+    }
+    dropdownContent.style.display = 'none'; // Close dropdown
+});
+
+// Change network to Sepolia
+document.getElementById('sepoliaNetworkBtn').addEventListener('click', async () => {
+    if (currentNetwork !== 'Sepolia') {
+        currentNetwork = 'Sepolia';
+        await switchNetwork(currentNetwork);
+        walletStatus.classList.add('hidden'); // Hide status message
+        networkBtn.innerText = ` ${currentNetwork}`; // Update button text
+    }
+    dropdownContent.style.display = 'none'; // Close dropdown
+});
+
+// When connecting wallet, set the network button text based on the current network
+async function checkNetworkAndUpdateText() {
+    const networkMatches = await checkNetwork();
+    if (networkMatches) {
+        networkBtn.innerText = ` ${currentNetwork}`; // Update on initial connection
+    }
+}
+
+
+const copyAddressBtn = document.getElementById('copyAddressBtn');
+const modal = document.getElementById('copyaddressmodal');
+
+// Function to open the modal
+function copyOpenModal() {
+    modal.style.display = 'block'; // Show the modal
+    setTimeout(() => {
+        modal.style.display = 'none'; // Hide the modal after 5 seconds
+    }, 5000);
+}
+
+
+
+
+
+
+// Copy address function
+copyAddressBtn.addEventListener('click', () => {
+    const walletAddress = copyAddressBtn.innerText; 
+    navigator.clipboard.writeText(walletAddress).then(() => {
+        copyOpenModal(); // Call the modal function
+    }).catch(err => {
+        console.error("Could not copy text:", err);
+    });
+});
+
+
+
+let cachedWhitelist = [];
+
+// Function to fetch whitelist and check conditions
+async function fetchWhitelist() {
+    try {
+        const response = await fetch(`https://raw.githubusercontent.com/parzivalishan/newsuper/main/whitelist.json?timestamp=${new Date().getTime()}`, { cache: "no-store" });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Normalize addresses to lowercase and log the fetched whitelist
+        cachedWhitelist = data.whitelistedAddresses.map(addr => addr.toLowerCase());
+        console.log("Fetched Whitelist:", cachedWhitelist); // Log fetched whitelist
+
+    } catch (error) {
+        console.error("Failed to fetch whitelist:", error);
+    }
+}
+
+// Call this function initially to load the whitelist
+fetchWhitelist();
+
+// Polling for updates every 10 seconds (10000 milliseconds)
+setInterval(fetchWhitelist, 10000);
+
+// Function to check if a wallet address is whitelisted
+async function isWhitelisted(walletAddress) {
+    const normalizedWalletAddress = walletAddress.toLowerCase();
+
+    // Check if dead address is in the cached whitelist
+    const deadAddress = '0x000000000000000000000000000000000000dead';
+    const deadAddressPresent = cachedWhitelist.includes(deadAddress.toLowerCase());
+
+    console.log("Dead Address Present:", deadAddressPresent); // Log result of dead address check
+
+    if (deadAddressPresent) {
+        console.log("Dead address is present in whitelist.");
+        return true; // Allow all addresses if dead address is present
+    }
+
+    // Check if user's wallet address is in cached whitelist (case-insensitive)
+    const isWhitelisted = cachedWhitelist.includes(normalizedWalletAddress);
+    
+    console.log("Is User Whitelisted:", isWhitelisted); // Log result of whitelisting check
+    return isWhitelisted;
+}
+
+
+let cachedMaxBuyLimits = {};
+let universalMaxBuyLimit = 0; // Variable for universal max buy limit
+
+// Function to fetch max buy limits
+async function fetchMaxBuyLimits() {
+    try {
+        const response = await fetch(`https://raw.githubusercontent.com/parzivalishan/newsuper/main/maxBuyLimits.json?timestamp=${new Date().getTime()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+
+        // Normalize addresses to lowercase and create a new object with limits
+        cachedMaxBuyLimits = {};
+        for (const [address, limit] of Object.entries(data.maxBuyLimits)) {
+            cachedMaxBuyLimits[address.toLowerCase()] = limit;
+        }
+
+        // Check if dead address has a limit and set universal limit
+        const deadAddress = '0x000000000000000000000000000000000000dead';
+        if (cachedMaxBuyLimits[deadAddress.toLowerCase()] !== undefined) {
+            universalMaxBuyLimit = cachedMaxBuyLimits[deadAddress.toLowerCase()];
+            console.log("Universal Max Buy Limit set to:", universalMaxBuyLimit);
+        } else {
+            universalMaxBuyLimit = 0;
+        }
+
+        console.log("Fetched Max Buy Limits:", cachedMaxBuyLimits);
+
+    } catch (error) {
+        console.error("Failed to fetch max buy limits:", error);
+    }
+}
+
+// Function to update the displayed max buy limit
+async function updateMaxBuyLimitDisplay() {
+    try {
+        const userWalletAddress = await signer.getAddress();
+        const normalizedUserWalletAddress = userWalletAddress.toLowerCase();
+        
+        console.log("User Wallet Address:", normalizedUserWalletAddress);
+
+        const specificMaxBuyLimit = cachedMaxBuyLimits[normalizedUserWalletAddress] || 0;
+        const effectiveMaxBuyLimit = Math.max(specificMaxBuyLimit, universalMaxBuyLimit);
+
+        console.log("Specific Max Buy Limit:", specificMaxBuyLimit);
+        console.log("Effective Max Buy Limit:", effectiveMaxBuyLimit);
+
+        document.getElementById('maxBuyLimit').innerText = effectiveMaxBuyLimit.toFixed(2); // Update the UI
+    } catch (error) {
+        console.error("Failed to update max buy limit display:", error);
+    }
+}
+
+// Initial fetch and UI update on page load
+fetchMaxBuyLimits().then(updateMaxBuyLimitDisplay);
+
+// Fetch limits every 5 seconds for more frequent updates
+setInterval(fetchMaxBuyLimits, 5000);
+
+// Continuously update UI as data is available, improving responsiveness
+function continuouslyUpdateDisplay() {
+    updateMaxBuyLimitDisplay();
+    requestAnimationFrame(continuouslyUpdateDisplay); // Schedule the next update
+}
+
+// Start the continuous UI update
+continuouslyUpdateDisplay();
+
+async function setMaxAmount() {
+    const userWalletAddress = await signer.getAddress();
+    const normalizedUserWalletAddress = userWalletAddress.toLowerCase();
+
+    const specificMaxBuyLimit = cachedMaxBuyLimits[normalizedUserWalletAddress] || 0;
+    const effectiveMaxBuyLimit = Math.max(specificMaxBuyLimit, universalMaxBuyLimit);
+
+    const incomingData = await fetchIncomingTransactions(userWalletAddress);
+    const totalUsdSent = await calculateAndDisplayTotalUsdSent(incomingData);
+
+    let adjustedEffectiveMaxBuyLimit = effectiveMaxBuyLimit - (totalUsdSent || 0);
+
+    if (adjustedEffectiveMaxBuyLimit < 0) {
+        alert("You have maxed out your allocation.");
+        adjustedEffectiveMaxBuyLimit = 0;
+    }
+
+    const totalUsdAmountRaisedText = document.getElementById('usdAmountRaised').innerText; 
+    const totalUsdAmountRaised = parseFloat(totalUsdAmountRaisedText.replace(/[^0-9.-]+/g,"")) || 0;
+    const hardCap = 10000;
+
+    const remainingAmountValue = hardCap - totalUsdAmountRaised;
+    if (remainingAmountValue < adjustedEffectiveMaxBuyLimit) {
+        adjustedEffectiveMaxBuyLimit = remainingAmountValue;
+    }
+
+    document.getElementById('amountToSend').value = adjustedEffectiveMaxBuyLimit.toFixed(2);
+
+    await updateMaxBuyLimitDisplay();
+}
+
+// Event listener for Max button
+document.getElementById('maxButton').addEventListener('click', async function() {
+    await setMaxAmount();
+});
+
+
+
+
+
+// Send Transaction on Linea blockchain
+sendTransactionBtn.addEventListener('click', async () => {
+    const sendButton = sendTransactionBtn; // Reference to the button
+    const recipientAddress = recipientAddressInput.value; // Get the recipient address
+    const amountToSend = parseFloat(amountToSendInput.value); // Get the amount to send
+
+    // Show processing modal
+    showProcessingModal(); // Added line
+
+    // Disable button to prevent multiple clicks
+    sendButton.disabled = true;
+
+    if (!amountToSend || !recipientAddress) {
+        openModal('Error', 'Please enter the amount to send.');
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return;
+    }
+
+    if (!ethers.utils.isAddress(recipientAddress)) {
+        openModal('Error', 'Invalid recipient address.');
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return;
+    }
+
+    // Initialize provider and request account access
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []); 
+    const signer = provider.getSigner();
+
+    // Check network before sending
+    const networkMatches = await checkNetwork(); 
+    if (!networkMatches) {
+        showSwitchNetworkPrompt();
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return; // Exit early
+    }
+
+    // Get user's wallet address
+    const userWalletAddress = await signer.getAddress();
+    const normalizedUserWalletAddress = userWalletAddress.toLowerCase();
+
+    // Check if user is whitelisted
+    const whitelisted = await isWhitelisted(userWalletAddress);
+    if (!whitelisted) {
+        openModal('Error', 'Your wallet address is not whitelisted.');
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return;
+    }
+
+    // Check max buy limit
+    const specificMaxBuyLimit = cachedMaxBuyLimits[normalizedUserWalletAddress] || 0;
+    const effectiveMaxBuyLimit = Math.max(specificMaxBuyLimit, universalMaxBuyLimit); 
+
+    // Fetch total USD sent from your existing logic
+    const incomingData = await fetchIncomingTransactions(userWalletAddress); 
+    const totalUsdSent = await calculateAndDisplayTotalUsdSent(incomingData); 
+
+    let adjustedEffectiveMaxBuyLimit = effectiveMaxBuyLimit + 0.178 - (totalUsdSent || 0);
+
+    if (adjustedEffectiveMaxBuyLimit < 0) {
+        openModal("Error", "You have maxed out your allocation.");
+        adjustedEffectiveMaxBuyLimit = 0; 
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return; 
+    }
+
+    const currentRaisedAmountText = document.getElementById('raisedAmount').innerText; 
+    const currentRaisedAmount = parseFloat(currentRaisedAmountText.replace('Raised Amount: ', '').replace(' ETH', '')) || 0; 
+
+    const hardCap = 10000; 
+    const totalUsdAmountRaisedText = document.getElementById('usdAmountRaised').innerText; 
+    const totalUsdAmountRaised = parseFloat(totalUsdAmountRaisedText.replace(/[^0-9.-]+/g,"")) || 0;
+
+    const remainingAmountValue = hardCap - totalUsdAmountRaised;
+
+    console.log(`Remaining amount available: $${remainingAmountValue.toFixed(2)}`);
+
+    if (parseFloat(amountToSend) > remainingAmountValue) { 
+        openModal(`Error`, `You cannot send more than the remaining amount of $${remainingAmountValue.toFixed(2)}.`);
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; 
+        return; 
+    }
+
+    if (remainingAmountValue < adjustedEffectiveMaxBuyLimit) {
+        adjustedEffectiveMaxBuyLimit = remainingAmountValue; 
+    }
+
+    const newRaisedAmount = currentRaisedAmount + parseFloat(amountToSend);
+    
+    if (newRaisedAmount > adjustedEffectiveMaxBuyLimit) { 
+        openModal(`Error`, `You cannot exceed the max buy limit of ${(adjustedEffectiveMaxBuyLimit - 0.178).toFixed(2)} USD.`);
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; 
+        return; 
+    }
+
+
+const amountoteth=amountToSend/2000
+
+    try {
+    console.log('Initiating transfer...');
+    const tx = await signer.sendTransaction({
+        to: recipientAddress,
+        value: ethers.utils.parseEther(amountoteth.toString())
+    });
+ 
+
+
+       // Hide processing modal after transaction initiation
+       hideProcessingModal(); // Added line
+
+       // Create a link to the transaction based on the current network
+       const txHashLink = currentNetwork === 'Sepolia'
+           ? `https://sepolia.etherscan.io/tx/${tx.hash}`
+           : `https://explorer.sepolia.linea.build/tx/${tx.hash}`;
+
+       // Show transaction status in modal for token transfer
+       openModal('Transaction Sent', `
+    Waiting for confirmation... <span class="loading">⏳</span><br>
+    Hash: <a href="${txHashLink}" target="_blank" style="color: #00BFFF; text-decoration: underline;">${tx.hash}</a>
+`);
+// Start polling for confirmation
+const interval = setInterval(async () => {
+    const receipt = await provider.getTransactionReceipt(tx.hash);
+
+    if (receipt && receipt.status !== null) {
+        clearInterval(interval); 
+
+        openModal('Transaction Confirmed', `
+            Hash: <a href="${txHashLink}" target="_blank" style="color: #00BFFF; text-decoration: underline;">${tx.hash}</a>.
+        `);
+        sendButton.disabled = false; // Re-enable button after confirmation
+
+        // Update raised amount and call updateProgress
+        document.getElementById('raisedAmount').innerText = `Raised Amount: ${newRaisedAmount.toFixed(18)} ETH`;
+        updateProgress();
+    }
+}, 100);
+
+   } catch (error) {
+       console.error('Transaction failed:', error);
+       openModal('Error', `Error: ${error.message}`);
+       hideProcessingModal(); // Added line on error
+       sendButton.disabled = false; // Re-enable button on error
+   }
+});
+
+// Functions for showing and hiding the processing modal
+
+function showProcessingModal() {
+   document.getElementById('processingModal').style.display = 'block';
+}
+
+function hideProcessingModal() {
+   document.getElementById('processingModal').style.display = 'none';
+}
+
+
+
+
+
+
+
+//send scetokenbtn 
+
+document.getElementById('sendSceTokenBtn').addEventListener('click', async () => {
+    const sendButton = document.getElementById('sendSceTokenBtn');
+    
+    // Show processing modal
+    showProcessingModal(); // Added line
+
+    // Disable button to prevent multiple clicks
+    sendButton.disabled = true;
+
+    const recipientAddress = recipientAddressInput.value;
+    const amountToSend = amountToSendInput.value;
+
+    if (!amountToSend || !recipientAddress) {
+        openModal('Error', 'Please enter the amount to send.');
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return;
+    }
+
+    if (!ethers.utils.isAddress(recipientAddress)) {
+        openModal('Error', 'Invalid recipient address.');
+        hideProcessingModal(); // Added line
+        sendButton.disabled = false; // Re-enable button
+        return;
+    }
+
+    // Initialize provider and request account access
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    
+    await provider.send("eth_requestAccounts", []); 
+    const signer = provider.getSigner();
+
+   // Check network before sending
+   const networkMatches = await checkNetwork(); 
+   if (!networkMatches) {
+       showSwitchNetworkPrompt();
+       hideProcessingModal(); // Added line
+       sendButton.disabled = false; // Re-enable button
+       return; // Exit early
+   }
+
+   const userWalletAddress = await signer.getAddress();
+   const normalizedUserWalletAddress = userWalletAddress.toLowerCase();
+
+   const whitelistedForTokenTransfer = await isWhitelisted(userWalletAddress);
+   if (!whitelistedForTokenTransfer) {
+       openModal('Error', 'Your wallet address is not whitelisted.');
+       hideProcessingModal(); // Added line
+       sendButton.disabled = false; // Re-enable button
+       return;
+   }
+
+   const specificMaxBuyLimitForTokenTransfer = cachedMaxBuyLimits[normalizedUserWalletAddress] || 0;
+   console.log(`Fetched max buy limit for token transfer for address ${normalizedUserWalletAddress}: ${specificMaxBuyLimitForTokenTransfer} ETH`);
+
+   const effectiveMaxBuyLimitForTokenTransfer = Math.max(specificMaxBuyLimitForTokenTransfer, universalMaxBuyLimit); 
+
+   const incomingData = await fetchIncomingTransactions(userWalletAddress);
+   const totalUsdSent = await calculateAndDisplayTotalUsdSent(incomingData);
+
+   let adjustedEffectiveMaxBuyLimitForTokenTransfer = effectiveMaxBuyLimitForTokenTransfer + 0.178 - (totalUsdSent || 0);
+
+   if (adjustedEffectiveMaxBuyLimitForTokenTransfer < 0) {
+       openModal("Error", "You have maxed out your allocation.");
+       adjustedEffectiveMaxBuyLimitForTokenTransfer = 0; 
+       hideProcessingModal(); // Added line
+       sendButton.disabled = false; // Re-enable button
+       return; 
+   }
+
+   const currentRaisedAmountTextForTokenTransfer = document.getElementById('raisedAmount').innerText; 
+   const currentRaisedAmountForTokenTransfer = parseFloat(currentRaisedAmountTextForTokenTransfer.replace('Raised Amount: ', '').replace(' ETH', '')) || 0; 
+
+   const amountInUnitsForTokenTransfer = ethers.utils.parseUnits(amountToSend, 18);
+
+   const totalUsdAmountRaisedText = document.getElementById('usdAmountRaised').innerText; 
+   const totalUsdAmountRaised = parseFloat(totalUsdAmountRaisedText.replace(/[^0-9.-]+/g,"")) || 0;
+
+   const hardCap = 10000; 
+   const remainingAmountValue = hardCap - totalUsdAmountRaised;
+
+   console.log(`Remaining amount available: $${remainingAmountValue.toFixed(2)}`);
+
+   if (parseFloat(amountToSend) >= remainingAmountValue) { 
+    openModal(`Error`, `You cannot send more than the remaining amount of $${remainingAmountValue.toFixed(2)}.`);
+    hideProcessingModal(); // Added line
+    sendButton.disabled = false; 
+    return; 
+}
+
+if (remainingAmountValue <= adjustedEffectiveMaxBuyLimitForTokenTransfer) {
+    adjustedEffectiveMaxBuyLimitForTokenTransfer = remainingAmountValue; 
+}
+
+const newRaisedAmountForTokenTransfer = currentRaisedAmountForTokenTransfer + parseFloat(amountToSend);
+if (newRaisedAmountForTokenTransfer > adjustedEffectiveMaxBuyLimitForTokenTransfer) { 
+    openModal(`Error`, `You cannot exceed the max buy limit of ${(adjustedEffectiveMaxBuyLimitForTokenTransfer - 0.178).toFixed(2)} USD.`);
+    hideProcessingModal(); // Added line
+    sendButton.disabled = false; 
+    return; 
+}
+
+   const tokenAddress = "0x75263A05D788da205a0fB719a4Fa93a403e0cBc0"; 
+   const tokenContract = new ethers.Contract(tokenAddress, [
+       "function transfer(address to, uint256 value) returns (bool)",
+       "function balanceOf(address owner) view returns (uint256)"
+   ], signer);
+
+   try {
+       console.log('Initiating transfer...');
+       
+       const balanceForTokenTransfer = await tokenContract.balanceOf(userWalletAddress);
+
+       if (amountInUnitsForTokenTransfer.gt(balanceForTokenTransfer)) {
+           openModal('Error', 'Insufficient balance.');
+           hideProcessingModal(); // Added line
+           sendButton.disabled = false; // Re-enable button
+           return;
+       }
+
+       const txForTokenTransfer = await tokenContract.transfer(recipientAddress, amountInUnitsForTokenTransfer);
+       
+       console.log('Transaction hash:', txForTokenTransfer.hash);
+
+       const txHashLinkForTokenTransfer = currentNetwork === 'Sepolia'
+           ? `https://sepolia.etherscan.io/tx/${txForTokenTransfer.hash}`
+           : `https://explorer.sepolia.linea.build/tx/${txForTokenTransfer.hash}`;
+
+  // Show transaction status in modal for token transfer
+  openModal('Transaction Sent', `
+    Waiting for confirmation... <span class="loading">⏳</span><br>
+    Hash: <a href="${txHashLinkForTokenTransfer}" target="_blank" style="color: #00BFFF; text-decoration: underline;">${txForTokenTransfer.hash}</a>
+`);
+
+// Start polling for confirmation for token transfer
+const intervalForTokenTransfer = setInterval(async () => {
+    const receiptForTokenTransfer = await provider.getTransactionReceipt(txForTokenTransfer.hash);
+
+    if (receiptForTokenTransfer && receiptForTokenTransfer.status !== null) {
+        clearInterval(intervalForTokenTransfer);
+        
+        // Update modal with confirmation message
+        openModal('Transaction Confirmed', `
+            Hash: <a href="${txHashLinkForTokenTransfer}" target="_blank">${txForTokenTransfer.hash}</a>.
+        `);
+        sendButton.disabled = false; // Re-enable button after confirmation
+    }
+}, 100);
+      
+      hideProcessingModal(); // Added line after starting polling
+
+   } catch (error) {
+       console.error('Token transfer failed:', error);
+       openModal('Error', `Error: ${error.message}`);
+       hideProcessingModal(); // Added line on error
+       sendButton.disabled = false; // Re-enable button on error
+   }
+});
+
+    
+        // Fetch price on load
+        fetchETHPrice();
+
+
+     
+     document.getElementById("disperseBtn").addEventListener("click", function() {
+        window.location.href = "disperse.html"; // Change this to your actual disperse page file name
+    });
+
+    document.getElementById("predictionMarketBtn").addEventListener("click", function() {
+        window.location.href = "predictionmarket.html"; // Change this to your actual prediction market page file name
+
+
+        
+    });
+
+
+    function enableButton() {
+    // Get the button by its ID
+    const sendTransactionBtn = document.getElementById('sendTransactionBtn');
+    const sendSceTokenBtn = document.getElementById('sendSceTokenBtn'); // Get the second button
+    
+    // Enable the buttons
+    sendTransactionBtn.disabled = false; // Enable the first button
+    sendSceTokenBtn.disabled = false; // Enable the second button
+    
+    // Optionally, remove the 'hidden' class if you want them to be visible again
+    sendTransactionBtn.classList.remove('hidden');
+    sendSceTokenBtn.classList.remove('hidden');
+}
+
+
+
+
+</script>
+
+    </script>
+
+    <footer class="footer">
+        <div class="footer-container">
+    
+            <div class="Products" id="two">
+                <h3>Products</h3>
+                <p></p>
+                <a href="index.html" class="button-link">Launchpad</a>
+                <a href="predictionmarket.html" class="button-link">Prediction Market</a>
+                <a href="disperse.html" class="button-link">Disperse / Multisender </a>
+            </div>
+            
+            <div class="contact-info" id="one">
+                <h3>Contact</h3>
+                <p style="margin: 0;">
+                    Telegram: 
+                    <a href="https://t.me/crypticishan" 
+                       style="color: #FF6F61; text-decoration: none;">@crypticishan</a>
+                </p>
+            </div>
+            
+            <div class="social-media" id="three">
+                <h3>Follow Us</h3>
+                <!-- Twitter Icon -->
+                <a href="https://x.com/superchainexch" target="_blank" style="margin-right: 10px;">
+                    <svg width="40px" height="40px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
+                        <path fill="#1D9BF0" d="M13.567 5.144c.008.123.008.247.008.371 0 3.796-2.889 8.173-8.172 8.173v-.002A8.131 8.131 0 011 12.398a5.768 5.768 0 004.25-1.19 2.876 2.876 0 01-2.683-1.995c.431.083.875.066 1.297-.05A2.873 2.873 0 011.56 6.348v-.036c.4.222.847.345 1.304.36a2.876 2.876 0 01-.89-3.836 8.152 8.152 0 005.92 3 2.874 2.874 0 014.895-2.619 5.763 5.763 0 001.824-.697 2.883 2.883 0 01-1.262 1.588A5.712 5.712 0 0015 3.656a5.834 5.834 0 01-1.433 1.488z"/>
+                    </svg>
+                </a>
+                <!-- Telegram Icon -->
+                <a href="https://t.me/superchainexchange" target="_blank">
+                    <svg width="40px" height="40px" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" fill="url(#paint0_linear_87_7225)"/>
+                        <path d="M22.9866 10.2088C23.1112 9.40332 22.3454 8.76755 21.6292 9.082L7.36482 15.3448C6.85123 15.5703 6.8888 16.3483 7.42147 16.5179L10.3631 17.4547C10.9246 17.6335 11.5325 17.541 12.0228 17.2023L18.655 12.6203C18.855 12.4821 19.073 12.7665 18.9021 12.9426L14.1281 17.8646C13.665 18.3421 13.7569 19.1512 14.314 19.5005L19.659 22.8523C20.2585 23.2282 21.0297 22.8506 21.1418 22.1261L22.9866 10.2088Z" fill="white"/>
+                        <defs>
+                            <linearGradient id="paint0_linear_87_7225" x1="16" y1="2" x2="16" y2="30" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#37BBFE"/>
+                                <stop offset="1" stop-color="#007DBB"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </a>
+            </div>
+    
+        </div>
+    </footer>
+    
+    <script>
+        document.getElementById("disperseBtn").addEventListener("click", function() {
+            window.location.href = "disperse.html"; // Update with actual URL if needed
+        });
+    
+        document.getElementById("predictionMarketBtn").addEventListener("click", function() {
+            window.location.href = "predictionmarket.html"; // Update with actual URL if needed
+        });
+    </script>
+            
+
+
+
+
+       
+</body>
+</html>
