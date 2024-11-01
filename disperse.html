@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiSender on Linea </title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4a4a4a 0%, #e5e5e5 100%);
+
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        h1, h3 {
+            margin: 10px 0;
+        }
+
+        button, textarea, input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            height: 150px; /* Increased height */
+            width: 500px; /* Increased width */
+            resize: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #e6f7e6; /* Greenish-white color */
+        }
+
+        .option-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+    border: 1px solid #ccc; /* You can keep this or change it for better contrast */
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ffcccb; /* Light pink background */
+}
+
+
+
+        .radio-container {
+            position: relative;
+            margin: 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .radio-container input {
+            display: none;
+        }
+
+        .radio-label {
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .radio-container input:checked + .radio-label {
+            background-color: #007BFF;
+            color: rgb(255, 255, 255);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .contract-address-container {
+    display: none; /* Initially hide the contract address input */
+    margin-top: 10px; /* Add margin for spacing */
+    width: 100%; /* Make the container responsive */
+    max-width: 500px; /* Set a max-width for larger screens */
+    background: linear-gradient(135deg, #4a4a4a 0%, #e5e5e5 100%); /* Updated to gradient background */
+    border-radius: 8px; /* Rounded corners for smooth appearance */
+    padding: 15px; /* Add padding inside the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease-in-out; /* Smooth transition for visibility changes */
+    box-sizing: border-box; /* Include padding and borders in the width calculation */
+}
+
+#contractAddress {
+    width: 100%; /* Make the input field take full width of the container */
+    padding: 12px 15px; /* Increase padding for a more clickable area */
+    font-size: 16px; /* Font size for readability */
+    border: 1px solid #ccc; /* Light border for definition */
+    border-radius: 6px; /* Rounded input field */
+    background-color: #fff; /* White background for input */
+    color: #333; /* Darker text color */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover/focus effects */
+    box-sizing: border-box; /* Include padding and borders in the width calculation */
+}
+
+/* Hover and focus states for better interaction */
+#contractAddress:hover, #contractAddress:focus {
+    border-color: #007bff; /* Highlight border on hover and focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add shadow on focus */
+    outline: none; /* Remove default outline */
+}
+
+
+
+
+        #balanceDisplay {
+            margin-top: 10px; /* Add margin for spacing */
+            font-weight: bold;
+        }
+
+      
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 20% auto; /* Centered */
+    padding: 15px; /* Adjust padding for smaller size */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px; /* Set a fixed width for the modal */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Success and Error Styles */
+.success {
+    color: green; /* Green text for success */
+}
+
+.error {
+    color: red; /* Red text for error */
+}
+
+.bold-italic {
+    font-weight: bold; /* Make text bold */
+    font-style: italic; /* Make text italic */
+    text-align: center; /* Center align text */
+}
+
+    </style>
+</head>
+<body>
+    <h1>Disperse on Linea Sepolia Testnet </h1>
+
+    <button id="connectWallet" style="font-weight: bold; font-size: 16px;">Connect Wallet</button>
+
+    <p id="walletAddress"></p>
+    <p id="balanceDisplay"></p>
+
+    <h3>Send:</h3>
+    <div class="option-container">
+        <div class="radio-container">
+            <input type="radio" id="sendEther" name="sendOption" value="ether" checked>
+            <label for="sendEther" class="radio-label">
+                <img src="https://raw.githubusercontent.com/parzivalishan/newsuper/refs/heads/main/assets/eth%20logo.png" alt="Ether Logo" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
+                Ether
+            </label>
+            
+        </div>
+        <div class="radio-container">
+            <input type="radio" id="sendToken" name="sendOption" value="token">
+            <label for="sendToken" class="radio-label">Tokens</label>
+        </div>
+    </div>
+
+<!-- Contract Address Input -->
+<div class="contract-address-container" id="contractAddressContainer">
+    <input type="text" id="contractAddress" placeholder="Enter token contract address" class="bold-italic" />
+</div>
+
+
+
+
+
+    <h3>Recipients and Amounts</h3>
+    <p>Enter one address and amount in ETH on each line. Supports any format:</p>
+    <textarea id="recipientsAndAmounts" placeholder="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 3.141592 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe,2.7182 0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9=1.42069"></textarea><br>
+    
+    <button id="disperseBtn" style="font-weight: bold; font-size: 16px;">Disperse ETH</button>
+
+
+
+
+
+      <!-- Modal Structure -->
+      <div id="customAlert" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const contractAddress = "0xC9F5033b10F1692DAe5b60F4AAe5dA21ED5D0358";
+        const contractABI = [
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "recipients",
+                        "type": "address[]"
+                    },
+                    {
+                        "name": "values",
+                        "type": "uint256[]"
+                    }
+                ],
+                "name": "disperseTokenSimple",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "recipients",
+                        "type": "address[]"
+                    },
+                    {
+                        "name": "values",
+                        "type": "uint256[]"
+                    }
+                ],
+                "name": "disperseToken",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "recipients",
+                        "type": "address[]"
+                    },
+                    {
+                        "name": "values",
+                        "type": "uint256[]"
+                    }
+                ],
+                "name": "disperseEther",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
+                "type": "function"
+            }
+        ];
+
+
+
+
+        let web3;
+        let account;
+        let contract;
+        let connectedAccount;
+
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(window.ethereum);
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+            } else {
+                alert("Please install MetaMask to use this feature.");
+            }
+        });
+// Define the Linea network parameters
+const LINEA_CHAIN_ID = '0xe705'; // Ensure this is correct and matches the requirements
+
+const LINEA_NETWORK_PARAMS = {
+    chainId: LINEA_CHAIN_ID, // MetaMask accepts this as a string with '0x' prefix
+    chainName: 'Linea',
+    rpcUrls: ['https://rpc.sepolia.linea.build/'],
+    nativeCurrency: {
+        name: 'ETH',
+        symbol: 'ETH',
+        decimals: 18,
+    },
+    blockExplorerUrls: ['https://explorer.sepolia.linea.build/'], // Ensure the URL is valid
+};
+
+document.getElementById('connectWallet').onclick = async () => {
+    try {
+        // Check the current chain ID
+        const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+        // If not connected to the Linea network, prompt to switch
+        if (chainId !== LINEA_CHAIN_ID) {
+            // Request the user to add/switch to the Linea network
+            await ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [LINEA_NETWORK_PARAMS],
+            });
+        }
+
+        // Now, request the accounts
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const connectedAccount = accounts[0]; // Store the connected account
+
+        // Update the button text with sliced wallet address
+        const shortAddress = `${connectedAccount.slice(0, 10)}...${connectedAccount.slice(-8)}`;
+        const connectButton = document.getElementById('connectWallet');
+        connectButton.textContent = shortAddress; // Replace button text with short address
+
+        // Optionally, disable the button or change its appearance
+        connectButton.disabled = true; // Disable button after connecting
+
+        document.getElementById('walletAddress').textContent = `Connected: ${connectedAccount}`; // Use connectedAccount here
+
+        // Fetch the wallet balance in parallel using Promise.all
+        const balance = await web3.eth.getBalance(connectedAccount); // Use connectedAccount to fetch balance
+        const etherBalance = web3.utils.fromWei(balance, 'ether'); // Convert balance from Wei to Ether
+        document.getElementById('balanceDisplay').textContent = `ETH: ${etherBalance}`;
+
+    } catch (error) {
+        console.error("Error connecting to wallet:", error);
+        alert("An error occurred. Please check the console for details.");
+    }
+};
+
+
+
+
+        // Show or hide the contract address input based on selection
+        document.querySelectorAll('input[name="sendOption"]').forEach((elem) => {
+            elem.addEventListener("change", function() {
+                const contractAddressContainer = document.getElementById("contractAddressContainer");
+                if (this.value === "token") {
+                    contractAddressContainer.style.display = "block"; // Show input for contract address
+                } else {
+                    contractAddressContainer.style.display = "none"; // Hide input for contract address
+                }
+            });
+        });
+
+
+        // Define the token ABI (replace this with the actual ABI of your token)
+const tokenABI = [
+    {
+        "constant": true,
+        "inputs": [{"name": "_owner", "type": "address"}],
+        "name": "balanceOf",
+        "outputs": [{"name": "balance", "type": "uint256"}],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {"name": "_spender", "type": "address"},
+            {"name": "_value", "type": "uint256"}
+        ],
+        "name": "approve",
+        "outputs": [{"name": "", "type": "bool"}],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        // Add other function definitions as needed
+    }
+];
+
+function openModal(title, message, type) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalMessage').innerHTML = message; // Use innerHTML to allow HTML content
+
+    const modalContent = document.querySelector('.modal-content');
+
+    if (type === 'success') {
+        modalContent.classList.add('success');
+        modalContent.classList.remove('error');
+    } else if (type === 'error') {
+        modalContent.classList.add('error');
+        modalContent.classList.remove('success');
+    }
+
+    document.getElementById('customAlert').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('customAlert').style.display = 'none';
+}
+
+// Disperse Ether or Tokens based on selection
+document.getElementById('disperseBtn').onclick = async () => {
+    // Check if the user is on the Linea network
+    const networkId = await web3.eth.net.getId();
+    const expectedNetworkId = 59141; // Linea network ID
+
+    if (networkId !== expectedNetworkId) {
+        const userConfirmed = confirm(`Please connect to the Linea network (Network ID: ${expectedNetworkId}). Would you like to switch networks?`);
+        if (userConfirmed) {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: LINEA_CHAIN_ID }], // Switch to Linea network
+                });
+            } catch (switchError) {
+                // Handle network switch errors
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [LINEA_NETWORK_PARAMS],
+                        });
+                    } catch (addError) {
+                        console.error("Error adding network:", addError);
+                        openModal("Error", "Failed to add the Linea network. Please switch manually.", "error");
+                        return; // Exit if the network addition fails
+                    }
+                } else {
+                    console.error("Switching network error:", switchError);
+                    openModal("Error", "Failed to switch networks. Please switch manually.", "error");
+                    return; // Exit if the network switch fails
+                }
+            }
+        } else {
+            return; // Exit if the user chooses not to switch networks
+        }
+    }
+
+    // Fetch the connected account here
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const account = accounts[0]; // Retrieve the first account
+
+    const sendOption = document.querySelector('input[name="sendOption"]:checked').value;
+    const data = document.getElementById('recipientsAndAmounts').value.trim();
+    const recipients = [];
+    const values = [];
+
+    // Split input data by newlines and commas
+    const entries = data.split(/[\n,]+/); // Split by either newline or comma
+
+    for (const entry of entries) {
+        const parts = entry.trim().split(/\s*[=,\s]+\s*/); // Split by space, comma, or equal sign
+
+        if (parts.length >= 2) {
+            const recipient = parts[0].trim();
+            const value = parseFloat(parts[1].trim());
+
+            if (web3.utils.isAddress(recipient) && !isNaN(value)) {
+                recipients.push(recipient);
+                values.push(web3.utils.toWei(value.toString(), 'ether'));
+            } else {
+                openModal("Error", `Invalid input: "${entry}". Ensure the address is valid and the amount is a number.`, "error");
+                return;
+            }
+        } else {
+            openModal("Error", `Invalid input format for: "${entry}". Each entry should contain an address and an amount.`, "error");
+            return;
+        }
+    }
+
+    console.log("Recipients:", recipients);
+    console.log("Values:", values);
+
+    try {
+    if (sendOption === "ether") {
+        const totalValue = web3.utils.toWei(values.reduce((acc, val) => acc + parseFloat(web3.utils.fromWei(val, 'ether')), 0).toString(), 'ether');
+
+        // Send ether and start polling for confirmation
+        const etherReceipt = await contract.methods.disperseEther(recipients, values).send({
+            from: account,
+            value: totalValue,
+            gas: 300000 // Adjust as necessary
+        })
+        .on('transactionHash', function(hash) {
+            // Create hyperlink for the transaction hash immediately after confirmation
+            const explorerLink = `https://explorer.sepolia.linea.build/tx/${hash}`;
+            const linkElement = document.createElement('a');
+            linkElement.href = explorerLink;
+            linkElement.target = '_blank'; // Open in a new tab
+            linkElement.textContent = `View Transaction: ${hash}`;
+
+            document.body.appendChild(linkElement);
+
+            // Start polling for confirmation
+            const interval = setInterval(async () => {
+                const receipt = await web3.eth.getTransactionReceipt(hash);
+                if (receipt) {
+                    clearInterval(interval); // Stop polling if we have a receipt
+                    openModal("Success", `Ether dispersed successfully!<br><a href='${explorerLink}' target='_blank'>View Transaction</a>`, "success");
+                }
+            }, 100); // Check every 100 milliseconds
+        })
+        .on('error', function(error) {
+            console.error("Error during disperse:", error.message || error);
+            openModal("Error", "An error occurred while dispersing. Check the console for details.", "error");
+        });
+
+    } else { 
+        const tokenAddress = document.getElementById('contractAddress').value;
+        if (!web3.utils.isAddress(tokenAddress)) {
+            openModal("Error", "Invalid token contract address", "error");
+            return;
+        }
+
+        const tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
+        const totalAmount = values.reduce((acc, val) => acc + parseFloat(web3.utils.fromWei(val, 'ether')), 0); // Calculate total amount
+
+        // Function to disperse tokens
+        async function disperseTokens() {
+            const button = document.getElementById('disperseBtn');
+
+            try {
+                // Step 1: Disable the button to prevent further clicks
+                button.disabled = true;
+                openModal("Processing", "Please wait until the approval is completed.", "info");
+
+                // Step 2: Approve the disperse contract to spend tokens
+                const approvalReceipt = await tokenContract.methods.approve(contractAddress, web3.utils.toWei(totalAmount.toString(), 'ether')).send({ from: account });
+
+                console.log("Approval successful:", approvalReceipt);
+
+                // Create hyperlink for the approval transaction hash
+                const approvalHash = approvalReceipt.transactionHash;
+                const approvalExplorerLink = `https://explorer.sepolia.linea.build/tx/${approvalHash}`;
+                const approvalLinkElement = document.createElement('a');
+                approvalLinkElement.href = approvalExplorerLink;
+                approvalLinkElement.target = '_blank';
+                approvalLinkElement.textContent = `Approval successful`; // Only show a user-friendly message
+
+                // Update modal message to indicate approval success
+                openModal("Approval successful!", `${approvalLinkElement.outerHTML} .Confirm Token Disperse`, "info");
+
+                // Start polling for approval confirmation
+                const approvalInterval = setInterval(async () => {
+                    const receipt = await web3.eth.getTransactionReceipt(approvalHash);
+                    if (receipt) {
+                        clearInterval(approvalInterval);
+                        
+                        // Stop polling if we have a receipt
+                        console.log("Approval confirmed:", receipt);
+
+                        // Step 3: Now disperse tokens
+                        const disperseReceipt = await contract.methods.disperseToken(tokenAddress, recipients, values).send({
+                            from: account,
+                            gas: await contract.methods.disperseToken(tokenAddress, recipients, values).estimateGas({ from: account })
+                        })
+                        .on('transactionHash', function(hash) {
+                            const explorerLink = `https://explorer.sepolia.linea.build/tx/${hash}`;
+                            const linkElement = document.createElement('a');
+                            linkElement.href = explorerLink;
+                            linkElement.target = '_blank';
+                            linkElement.textContent = `View Transaction: ${hash}`;
+                            document.body.appendChild(linkElement);
+
+                            // Start polling for confirmation of disperse transaction
+                            const disperseInterval = setInterval(async () => {
+                                const disperseReceipt = await web3.eth.getTransactionReceipt(hash);
+                                if (disperseReceipt) {
+                                    clearInterval(disperseInterval); // Stop polling if we have a receipt
+                                    openModal("Success", `Tokens dispersed successfully!<br><a href='${explorerLink}' target='_blank'>View Transaction</a>`, "success");
+                                }
+                            }, 100); // Check every 100 milliseconds
+                        })
+                        .on('error', function(error) {
+                            console.error("Error during disperse:", error.message || error);
+                            openModal("Error", "An error occurred while dispersing. Check the console for details.", "error");
+                        });
+                    }
+                }, 100); // Check every 100 milliseconds for approval confirmation
+
+            } catch (error) {
+                console.error("Error during approval or disperse:", error.message || error);
+                openModal("Error", "An error occurred while approving or dispersing tokens. Check the console for details.", "error");
+            } finally {
+                // Step 4: Re-enable the button after the transaction is complete
+                button.disabled = false;
+            }
+        }
+
+        // Call the disperseTokens function
+        await disperseTokens();
+    }
+} catch (error) {
+    console.error("Error during processing:", error.message || error);
+    openModal("Error", "An error occurred while processing your request. Check the console for details.", "error");
+}
+};
+
+
+ // Add this at the end of your script block
+ function updateDisperseButton() {
+        const etherRadio = document.getElementById('sendEther');
+        const button = document.getElementById('disperseBtn');
+        
+        if (etherRadio.checked) {
+            button.textContent = 'Disperse ETH';
+        } else {
+            button.textContent = 'Disperse Tokens';
+        }
+    }
+
+    // Event listeners for radio buttons
+    document.getElementById('sendEther').addEventListener('change', updateDisperseButton);
+    document.getElementById('sendToken').addEventListener('change', updateDisperseButton);
+
+    // Initial button text setup
+    updateDisperseButton();
+
+    </script>
+</body>
+</html>
