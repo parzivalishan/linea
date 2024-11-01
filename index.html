@@ -1079,6 +1079,35 @@ button:hover {
     }
 }
 
+#update-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50%; /* Makes the banner occupy only the left half of the top */
+  background-color: rgba(0, 0, 0, 0.7); /* Black with 70% opacity */
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px); /* Optional: Adds a subtle blur effect */
+  border-radius: 0 8px 8px 0; /* Adds a rounded edge on the right side */
+}
+
+#update-banner p {
+  margin: 0;
+}
+
+#update-banner button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
 
 
 .mini-page {
@@ -1453,8 +1482,14 @@ footer {
 
 </div>
 
+<div id="update-banner">
+    <p>🔔This website works for Linea Sepolia , please switch the network to Linea Sepolia </p>
+    <button onclick="closeBanner()">✖</button>
+  </div>
+  
+
 <div id="app2">
-    <h1>Vitalik Token IDO</h1>
+    <h1>Vitalik Token IDO  </h1>
 
 
 
@@ -2018,6 +2053,9 @@ setTimeout(() => {
 
 
         <script>
+function closeBanner() {
+  document.getElementById('update-banner').style.display = 'none';
+}
 
 
 
@@ -2768,7 +2806,6 @@ copyAddressBtn.addEventListener('click', function() {
         // If not on Linea, switch network
         if (currentChainId !== LINEA_CHAIN_ID) {
             await switchNetwork(LINEA_CHAIN_ID);
-            location.reload(); // Refresh the page after switching network
             return; // Exit early to prevent further execution until reload
         }
 
